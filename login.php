@@ -1,37 +1,41 @@
 <?php
 require_once __DIR__ . '/includes/functions.php';
 $pageTitle = 'Connexion admin';
-
+// Vérifier si l'administrateur est déjà connecté
 if (is_admin()) {
     redirect('admin/dashboard.php');
 }
-
+// Vérifier si le formulaire a été soumis
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Vérification du token CSRF pour sécuriser le formulaire
     verify_csrf();
 
     $email = trim($_POST['email'] ?? '');
     $password = $_POST['password'] ?? '';
 
     $stmt = db()->prepare('SELECT * FROM users WHERE email = :email LIMIT 1');
+    // Exécuter la requête avec l'email saisi 
     $stmt->execute(['email' => $email]);
     $user = $stmt->fetch();
-
+ // Vérifier si l'utilisateur existe et si le mot de passe est correct
     if ($user && password_verify($password, $user['password_hash'])) {
+         // Stocker les informations utilisateur dans la session
         $_SESSION['user'] = [
             'id' => $user['id'],
             'name' => $user['name'],
             'email' => $user['email'],
             'role' => $user['role'],
         ];
+         // Redirection vers le dashboard admin
         redirect('admin/dashboard.php');
     }
-
+// Message d'erreur si identifiants incorrects
     flash('danger', 'Email ou mot de passe incorrect.');
 }
 
 require __DIR__ . '/includes/header.php';
 ?>
-
+<!-- Section de connexion administrateur -->
 <section class="section-padding admin-layout">
     <div class="container">
         <div class="row justify-content-center">
