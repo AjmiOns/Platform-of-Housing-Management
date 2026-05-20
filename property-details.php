@@ -7,7 +7,7 @@ if (!$property || (int) $property['published'] !== 1) {
     flash('warning', 'Bien introuvable.');
     redirect('properties.php');
 }
-
+//
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     verify_csrf();
 
