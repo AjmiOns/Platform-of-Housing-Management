@@ -25,7 +25,7 @@ if (!empty($_GET['q'])) {
     $where[] = '(p.title LIKE :q OR p.description LIKE :q OR p.address LIKE :q)';
     $params['q'] = '%' . $_GET['q'] . '%';
 }
-
+//
 $sql = 'SELECT p.*, c.name AS category_name
         FROM properties p
         JOIN categories c ON c.id = p.category_id
