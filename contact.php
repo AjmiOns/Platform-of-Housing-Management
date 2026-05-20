@@ -1,182 +1,257 @@
-<!DOCTYPE html>
-<html lang="en">
+<?php
+require_once __DIR__ . '/includes/functions.php';
 
-  <head>
+$pageTitle = 'Contact';
+$settings = app_settings();
+$old = [
+    'full_name' => '',
+    'phone' => '',
+    'email' => '',
+    'subject' => '',
+    'message' => '',
+];
 
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    verify_csrf();
 
-    <title>Villa Agency TemplateMo - Contact Page</title>
+    $old = [
+        'full_name' => trim($_POST['full_name'] ?? ''),
+        'phone' => trim($_POST['phone'] ?? ''),
+        'email' => trim($_POST['email'] ?? ''),
+        'subject' => trim($_POST['subject'] ?? ''),
+        'message' => trim($_POST['message'] ?? ''),
+    ];
 
-    <!-- Bootstrap core CSS -->
-    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    if ($old['full_name'] === '' || $old['phone'] === '' || $old['subject'] === '' || $old['message'] === '') {
+        flash('danger', 'Veuillez remplir tous les champs obligatoires.');
+    } elseif ($old['email'] !== '' && !filter_var($old['email'], FILTER_VALIDATE_EMAIL)) {
+        flash('danger', 'Veuillez saisir une adresse email valide.');
+    } elseif (!preg_match('/^[0-9+\s]{8,20}$/', $old['phone'])) {
+        flash('danger', 'Veuillez saisir un numero de telephone tunisien valide.');
+    } else {
+        $stmt = db()->prepare(
+            'INSERT INTO contact_messages (full_name, phone, email, subject, message)
+             VALUES (:full_name, :phone, :email, :subject, :message)'
+        );
 
+        $stmt->execute([
+            'full_name' => $old['full_name'],
+            'phone' => $old['phone'],
+            'email' => $old['email'] !== '' ? $old['email'] : null,
+            'subject' => $old['subject'],
+            'message' => $old['message'],
+        ]);
 
-    <!-- Additional CSS Files -->
-    <link rel="stylesheet" href="assets/css/fontawesome.css">
-    <link rel="stylesheet" href="assets/css/templatemo-villa-agency.css">
-    <link rel="stylesheet" href="assets/css/owl.css">
-    <link rel="stylesheet" href="assets/css/animate.css">
-    <link rel="stylesheet"href="https://unpkg.com/swiper@7/swiper-bundle.min.css"/>
+        flash('success', 'Votre message a ete envoye avec succes. Notre equipe vous contactera rapidement.');
+        redirect('contact.php');
+    }
+}
 
-  </head>
+require __DIR__ . '/includes/header.php';
+?>
 
-<body>
-
-  <!-- ***** Preloader Start ***** -->
-  <div id="js-preloader" class="js-preloader">
-    <div class="preloader-inner">
-      <span class="dot"></span>
-      <div class="dots">
-        <span></span>
-        <span></span>
-        <span></span>
-      </div>
-    </div>
-  </div>
-  <!-- ***** Preloader End ***** -->
-
-  <div class="sub-header">
+<section class="contact-hero">
     <div class="container">
-      <div class="row">
-        <div class="col-lg-8 col-md-8">
-          <ul class="info">
-            <li><i class="fa fa-envelope"></i> info@company.com</li>
-            <li><i class="fa fa-map"></i> Sunny Isles Beach, FL 33160</li>
-          </ul>
-        </div>
-        <div class="col-lg-4 col-md-4">
-          <ul class="social-links">
-            <li><a href="#"><i class="fab fa-facebook"></i></a></li>
-            <li><a href="https://x.com/minthu" target="_blank"><i class="fab fa-twitter"></i></a></li>
-            <li><a href="#"><i class="fab fa-linkedin"></i></a></li>
-            <li><a href="#"><i class="fab fa-instagram"></i></a></li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ***** Header Area Start ***** -->
-  <header class="header-area header-sticky">
-    <div class="container">
-        <div class="row">
-            <div class="col-12">
-                <nav class="main-nav">
-                    <!-- ***** Logo Start ***** -->
-                    <a href="index.html" class="logo">
-                        <h1>Villa</h1>
-                    </a>
-                    <!-- ***** Logo End ***** -->
-                    <!-- ***** Menu Start ***** -->
-                    <ul class="nav">
-                      <li><a href="index.html">Home</a></li>
-                      <li><a href="properties.html">Properties</a></li>
-                      <li><a href="property-details.html">Property Details</a></li>
-                      <li><a href="contact.html" class="active">Contact Us</a></li>
-                      <li><a href="#"><i class="fa fa-calendar"></i> Schedule a visit</a></li>
-                  </ul>   
-                    <a class='menu-trigger'>
-                        <span>Menu</span>
-                    </a>
-                    <!-- ***** Menu End ***** -->
-                </nav>
+        <div class="row align-items-center g-4">
+            <div class="col-lg-7">
+                <span class="contact-badge">Agence immobiliere en Tunisie</span>
+                <h1>Contactez <?= h($settings['agency_name']) ?></h1>
+                <p>
+                    Vous cherchez une maison, un appartement, une villa ou un studio a louer ?
+                    Envoyez-nous votre demande et notre equipe vous accompagne selon votre budget et votre ville.
+                </p>
+            </div>
+            <div class="col-lg-5">
+                <div class="contact-quick-card">
+                    <h5>Besoin d'une reponse rapide ?</h5>
+                    <p class="mb-3">Appelez-nous ou contactez-nous sur WhatsApp.</p>
+                    <div class="d-flex flex-column gap-2">
+                        <a href="tel:<?= h(str_replace(' ', '', $settings['phone'])) ?>" class="btn btn-primary">
+                            <i class="fa-solid fa-phone me-2"></i><?= h($settings['phone']) ?>
+                        </a>
+                        <a href="https://wa.me/<?= h(preg_replace('/[^0-9]/', '', $settings['whatsapp'])) ?>" target="_blank" class="btn btn-success">
+                            <i class="fa-brands fa-whatsapp me-2"></i><?= h($settings['whatsapp']) ?>
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-  </header>
-  <!-- ***** Header Area End ***** -->
+</section>
 
-  <div class="page-heading header-text">
+<section class="contact-page section-padding">
     <div class="container">
-      <div class="row">
-        <div class="col-lg-12">
-          <span class="breadcrumb"><a href="#">Home</a>  /  Contact Us</span>
-          <h3>Contact Us</h3>
+        <?php show_flash(); ?>
+
+        <div class="row g-4 align-items-start">
+            <div class="col-lg-5">
+                <div class="contact-info-panel">
+                    <div class="section-title mb-4">
+                        <small>Nos informations</small>
+                        <h2><?= h($settings['agency_name']) ?></h2>
+                        <p class="text-muted mb-0"><?= h($settings['slogan']) ?></p>
+                    </div>
+
+                    <div class="contact-info-item">
+                        <div class="contact-icon bg-orange">
+                            <i class="fa-solid fa-phone"></i>
+                        </div>
+                        <div>
+                            <h6>Telephone</h6>
+                            <p><?= h($settings['phone']) ?></p>
+                        </div>
+                    </div>
+
+                    <div class="contact-info-item">
+                        <div class="contact-icon bg-green">
+                            <i class="fa-brands fa-whatsapp"></i>
+                        </div>
+                        <div>
+                            <h6>WhatsApp</h6>
+                            <p><?= h($settings['whatsapp']) ?></p>
+                        </div>
+                    </div>
+
+                    <div class="contact-info-item">
+                        <div class="contact-icon bg-blue">
+                            <i class="fa-solid fa-envelope"></i>
+                        </div>
+                        <div>
+                            <h6>Email</h6>
+                            <p><?= h($settings['email']) ?></p>
+                        </div>
+                    </div>
+
+                    <div class="contact-info-item">
+                        <div class="contact-icon bg-red">
+                            <i class="fa-solid fa-location-dot"></i>
+                        </div>
+                        <div>
+                            <h6>Adresse</h6>
+                            <p>
+                                <?= h($settings['address']) ?><br>
+                                <?= h($settings['city']) ?>, <?= h($settings['governorate']) ?>, Tunisie
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="contact-info-item mb-0">
+                        <div class="contact-icon bg-dark-custom">
+                            <i class="fa-solid fa-clock"></i>
+                        </div>
+                        <div>
+                            <h6>Horaires</h6>
+                            <p><?= h($settings['working_hours']) ?></p>
+                        </div>
+                    </div>
+                </div>
+
+                <?php if (!empty($settings['map_embed_url'])): ?>
+                    <div class="contact-map-card mt-4">
+                        <h5 class="mb-3">
+                            <i class="fa-solid fa-map-location-dot text-warning me-2"></i>
+                            Nous trouver
+                        </h5>
+                        <div class="contact-map">
+                            <iframe
+                                src="<?= h($settings['map_embed_url']) ?>"
+                                loading="lazy"
+                                allowfullscreen
+                                referrerpolicy="no-referrer-when-downgrade">
+                            </iframe>
+                        </div>
+                    </div>
+                <?php endif; ?>
+            </div>
+
+            <div class="col-lg-7">
+                <div class="contact-form-card">
+                    <div class="mb-4">
+                        <span class="contact-badge">Envoyer une demande</span>
+                        <h3 class="fw-bold mt-2 mb-2">Parlez-nous de votre besoin</h3>
+                        <p class="text-muted mb-0">
+                            Precisez le type de bien, la ville, votre budget en TND et la periode souhaitee.
+                        </p>
+                    </div>
+
+                    <form method="post">
+                        <?= csrf_field() ?>
+
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Nom complet *</label>
+                                <input
+                                    type="text"
+                                    name="full_name"
+                                    class="form-control"
+                                    value="<?= h($old['full_name']) ?>"
+                                    placeholder="Ex: Ahmed Ben Ali"
+                                    required>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Telephone *</label>
+                                <input
+                                    type="tel"
+                                    name="phone"
+                                    class="form-control"
+                                    value="<?= h($old['phone']) ?>"
+                                    placeholder="+216 55 123 456"
+                                    inputmode="tel"
+                                    required>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Email</label>
+                                <input
+                                    type="email"
+                                    name="email"
+                                    class="form-control"
+                                    value="<?= h($old['email']) ?>"
+                                    placeholder="exemple@email.com">
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Sujet *</label>
+                                <input
+                                    type="text"
+                                    name="subject"
+                                    class="form-control"
+                                    value="<?= h($old['subject']) ?>"
+                                    placeholder="Location appartement S+2"
+                                    required>
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label">Message *</label>
+                                <textarea
+                                    name="message"
+                                    rows="7"
+                                    class="form-control"
+                                    placeholder="Ex: Je cherche un appartement S+2 a La Marsa, budget maximum 1500 TND par mois..."
+                                    required><?= h($old['message']) ?></textarea>
+                            </div>
+
+                            <div class="col-12 d-flex flex-wrap gap-2 align-items-center">
+                                <button type="submit" class="btn btn-primary px-4">
+                                    <i class="fa-solid fa-paper-plane me-2"></i>
+                                    Envoyer le message
+                                </button>
+                                <span class="text-muted small">
+                                    Reponse generalement sous 24h.
+                                </span>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="contact-note mt-4">
+                    <i class="fa-solid fa-circle-info me-2"></i>
+                    Vos informations restent confidentielles et sont utilisees uniquement pour traiter votre demande immobiliere.
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
+</section>
 
-  <div class="contact-page section">
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-6">
-          <div class="section-heading">
-            <h6>| Contact Us</h6>
-            <h2>Get In Touch With Our Agents</h2>
-          </div>
-          <p>When you really need to download free CSS templates, please remember our website TemplateMo. Also, tell your friends about our website. Thank you for visiting. There is a variety of Bootstrap HTML CSS templates on our website. If you need more information, please contact us.</p>
-          <div class="row">
-            <div class="col-lg-12">
-              <div class="item phone">
-                <img src="assets/images/phone-icon.png" alt="" style="max-width: 52px;">
-                <h6>010-020-0340<br><span>Phone Number</span></h6>
-              </div>
-            </div>
-            <div class="col-lg-12">
-              <div class="item email">
-                <img src="assets/images/email-icon.png" alt="" style="max-width: 52px;">
-                <h6>info@villa.co<br><span>Business Email</span></h6>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-6">
-          <form id="contact-form" action="" method="post">
-            <div class="row">
-              <div class="col-lg-12">
-                <fieldset>
-                  <label for="name">Full Name</label>
-                  <input type="name" name="name" id="name" placeholder="Your Name..." autocomplete="on" required>
-                </fieldset>
-              </div>
-              <div class="col-lg-12">
-                <fieldset>
-                  <label for="email">Email Address</label>
-                  <input type="text" name="email" id="email" pattern="[^ @]*@[^ @]*" placeholder="Your E-mail..." required="">
-                </fieldset>
-              </div>
-              <div class="col-lg-12">
-                <fieldset>
-                  <label for="subject">Subject</label>
-                  <input type="subject" name="subject" id="subject" placeholder="Subject..." autocomplete="on" >
-                </fieldset>
-              </div>
-              <div class="col-lg-12">
-                <fieldset>
-                  <label for="message">Message</label>
-                  <textarea name="message" id="message" placeholder="Your Message"></textarea>
-                </fieldset>
-              </div>
-              <div class="col-lg-12">
-                <fieldset>
-                  <button type="submit" id="form-submit" class="orange-button">Send Message</button>
-                </fieldset>
-              </div>
-            </div>
-          </form>
-        </div>
-        <div class="col-lg-12">
-          <div id="map">
-            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d12469.776493332698!2d-80.14036379941481!3d25.907788681148624!2m3!1f357.26927939317244!2f20.870722720054623!3f0!3m2!1i1024!2i768!4f35!3m3!1m2!1s0x88d9add4b4ac788f%3A0xe77469d09480fcdb!2sSunny%20Isles%20Beach!5e1!3m2!1sen!2sth!4v1642869952544!5m2!1sen!2sth" width="100%" height="500px" frameborder="0" style="border:0; border-radius: 10px; box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.15);" allowfullscreen=""></iframe>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  
-
-  <!-- Scripts -->
-  <!-- Bootstrap core JavaScript -->
-  <script src="vendor/jquery/jquery.min.js"></script>
-  <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
-  <script src="assets/js/isotope.min.js"></script>
-  <script src="assets/js/owl-carousel.js"></script>
-  <script src="assets/js/counter.js"></script>
-  <script src="assets/js/custom.js"></script>
-
-  </body>
-</html>
+<?php require __DIR__ . '/includes/footer.php'; ?>
