@@ -157,7 +157,7 @@ require __DIR__ . '/includes/header.php';
 
                     <p class="text-center text-muted mt-3 mb-0 small">
                         Déjà un compte ?
-                        <a href="<?= base_url('login.php') ?>">Se connecter</a>
+                        <a href="login.php">Se connecter</a>
                     </p>
                 </form>
             </div>

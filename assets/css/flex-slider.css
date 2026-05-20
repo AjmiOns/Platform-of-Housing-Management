@@ -81,10 +81,10 @@ html[xmlns] .flexslider .slides {
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
   border-radius: 4px;
-  -webkit-box-shadow: '' 0 1px 4px rgba(0, 0, 0, 0.2);
-  -moz-box-shadow: '' 0 1px 4px rgba(0, 0, 0, 0.2);
-  -o-box-shadow: '' 0 1px 4px rgba(0, 0, 0, 0.2);
-  box-shadow: '' 0 1px 4px rgba(0, 0, 0, 0.2);
+  -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  -o-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
 }
 .flexslider .slides {
   zoom: 1;
@@ -113,7 +113,7 @@ html[xmlns] .flexslider .slides {
   margin-right: 5px;
 }
 .flex-direction-nav {
-  *height: 0;
+  
 }
 .flex-direction-nav a {
   text-decoration: none;
@@ -209,7 +209,7 @@ html[xmlns] .flexslider .slides {
   margin: 0 6px;
   display: inline-block;
   zoom: 1;
-  *display: inline;
+
 }
 .flex-control-paging li a {
   width: 11px;
