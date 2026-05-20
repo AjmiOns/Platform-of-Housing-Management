@@ -123,4 +123,8 @@ require __DIR__ . '/includes/header.php';
     </div>
 </section>
 
+<<<<<<< HEAD
 <?php require __DIR__ . '/includes/footer.php'; ?>
+=======
+<?php require __DIR__ . '/includes/footer.php'; ?>
+>>>>>>> d0b2f0d1228465baa2050fb0bfae6018b95a8f7b
