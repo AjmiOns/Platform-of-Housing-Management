@@ -12,7 +12,7 @@ $latestStmt = db()->query(
      LIMIT 6'
 );
 $latestProperties = $latestStmt->fetchAll();
-//
+
 $stats = [
     'properties' => (int) db()->query('SELECT COUNT(*) FROM properties WHERE published = 1')->fetchColumn(),
     'available' => (int) db()->query("SELECT COUNT(*) FROM properties WHERE published = 1 AND availability_status = 'available'")->fetchColumn(),

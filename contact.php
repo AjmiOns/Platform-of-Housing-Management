@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'subject' => trim($_POST['subject'] ?? ''),
         'message' => trim($_POST['message'] ?? ''),
     ];
-// 
+
     if ($old['full_name'] === '' || $old['phone'] === '' || $old['subject'] === '' || $old['message'] === '') {
         flash('danger', 'Veuillez remplir tous les champs obligatoires.');
     } elseif ($old['email'] !== '' && !filter_var($old['email'], FILTER_VALIDATE_EMAIL)) {
