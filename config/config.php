@@ -1,6 +1,6 @@
 <?php
 // Change APP_BASE if your folder name is different inside htdocs (xampp).
-define('APP_BASE', '/projet_js');
+define('APP_BASE', '/Platform-of-Housing-Management');
 define('APP_NAME', 'Dar Tunisie');
 define('UPLOAD_DIR', __DIR__ . '/../public/uploads/');
 define('UPLOAD_URL', APP_BASE . '/public/uploads/');
