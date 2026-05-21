@@ -54,6 +54,10 @@ require __DIR__ . '/includes/header.php';
                         <input type="password" name="password" class="form-control" required>
                     </div>
                     <button class="btn btn-primary w-100">Se connecter</button>
+                    <p class="text-center text-muted mt-3 mb-0 small">
+                        Vous n'avez pas de compte ?
+                        <a href="register.php">S'inscrire</a>
+                    </p>
                 </form>
             </div>
         </div>
