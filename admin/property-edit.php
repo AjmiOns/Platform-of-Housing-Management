@@ -1,5 +1,7 @@
 <?php
 require_once __DIR__ . '/../includes/auth.php';
+require_once __DIR__ . '/../includes/PropertyRepository.php';
+
 $pageTitle = 'Modifier un bien';
 
 $id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
@@ -89,17 +91,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'published'           => isset($_POST['published'])     ? 1 : 0,
     ];
 
-    db()->prepare(
-        'UPDATE properties SET
-            owner_id=:owner_id, category_id=:category_id, title=:title,
-            description=:description, governorate=:governorate, city=:city,
-            address=:address, rent_price=:rent_price, area=:area,
-            rooms=:rooms, bedrooms=:bedrooms, bathrooms=:bathrooms,
-            floor=:floor, parking=:parking, furnished=:furnished,
-            availability_status=:availability_status, contract_ready=:contract_ready,
-            payment_method=:payment_method, image_url=:image_url, published=:published
-         WHERE id=:id'
-    )->execute($data);
+    $repo = new PropertyRepository(db());
+$repo->update($id, $data);
 
     // Équipements
     db()->prepare('DELETE FROM property_features WHERE property_id = :pid')->execute(['pid' => $id]);

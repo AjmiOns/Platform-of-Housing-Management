@@ -1,5 +1,16 @@
 <?php
 require_once __DIR__ . '/../config/database.php';
+require_once __DIR__ . '/../config/Database.php';
+
+/**
+ * Raccourci global vers la connexion PDO (Singleton OOP)
+ * Maintient la compatibilité avec tout le code existant.
+ */
+function db(): PDO
+{
+    return Database::getInstance()->getConnection();
+}
+
 /**
  * Fonction de sécurisation des textes HTML
  * Empêche les attaques XSS

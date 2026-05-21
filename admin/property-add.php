@@ -1,5 +1,7 @@
 <?php
 require_once __DIR__ . '/../includes/auth.php';
+require_once __DIR__ . '/../includes/PropertyRepository.php';
+
 $pageTitle = 'Ajouter un bien';
 
 $categories   = db()->query('SELECT * FROM categories ORDER BY name')->fetchAll();
@@ -63,18 +65,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'published'           => isset($_POST['published'])     ? 1 : 0,
     ];
 
-    db()->prepare(
-        'INSERT INTO properties
-            (owner_id, category_id, title, description, governorate, city, address,
-             rent_price, area, rooms, bedrooms, bathrooms, floor, parking, furnished,
-             availability_status, contract_ready, payment_method, image_url, published)
-         VALUES
-            (:owner_id, :category_id, :title, :description, :governorate, :city, :address,
-             :rent_price, :area, :rooms, :bedrooms, :bathrooms, :floor, :parking, :furnished,
-             :availability_status, :contract_ready, :payment_method, :image_url, :published)'
-    )->execute($data);
-
-    $propertyId = db()->lastInsertId();
+   $repo = new PropertyRepository(db());
+$propertyId = $repo->create($data);
 
     // Équipements
     $rawFeatures = array_filter(array_map('trim', explode(',', $_POST['features'] ?? '')));
@@ -119,4 +111,5 @@ require __DIR__ . '/../includes/header.php';
     </div>
 </section>
 
-<?php require __DIR__ . '/../includes/footer.php'; ?>
+<?php require __DIR__ . '/../includes/footer.php';
+ ?>

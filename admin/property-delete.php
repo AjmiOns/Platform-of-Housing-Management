@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../includes/auth.php';
+require_once __DIR__ . '/../includes/PropertyRepository.php';
 
 $id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
 
@@ -8,18 +9,17 @@ if (!$id) {
     redirect('admin/properties.php');
 }
 
-// Vérifier que le bien existe
-$stmt = db()->prepare('SELECT id, title FROM properties WHERE id = :id LIMIT 1');
-$stmt->execute(['id' => $id]);
-$property = $stmt->fetch();
+$repo = new PropertyRepository(db());
+
+$property = $repo->findById($id);
 
 if (!$property) {
     flash('danger', 'Bien introuvable.');
     redirect('admin/properties.php');
 }
 
-// Suppression (les features sont supprimées en CASCADE)
-db()->prepare('DELETE FROM properties WHERE id = :id')->execute(['id' => $id]);
+// Suppression via Repository Pattern
+$repo->delete($id);
 
 flash('success', 'Le bien « ' . $property['title'] . ' » a été supprimé.');
 redirect('admin/properties.php');

@@ -155,14 +155,16 @@
 <!-- ── Image ── -->
 <h6 class="fw-bold text-muted mb-3 border-bottom pb-2">Image</h6>
 <div class="mb-4">
-    <label class="form-label">URL de l'image principale</label>
-    <input type="url" name="image_url" class="form-control"
-           value="<?= $v('image_url') ?>" placeholder="https://...">
+    <label class="form-label">Télécharger une image <span class="text-muted">(JPG, PNG, WEBP — max 3 MB)</span></label>
+    <input type="file" name="image_file" class="form-control" accept=".jpg,.jpeg,.png,.webp">
+
     <?php if (!empty($property['image_url'])): ?>
-        <div class="mt-2">
+        <div class="mt-2 d-flex align-items-center gap-3">
             <img src="<?= h(property_image($property['image_url'])) ?>"
-                 alt="Aperçu" style="max-height:120px;border-radius:6px;">
+                 alt="Image actuelle" style="max-height:100px;border-radius:6px;">
+            <span class="text-muted small">Image actuelle — laisser vide pour la conserver.</span>
         </div>
+        <input type="hidden" name="image_url" value="<?= h($property['image_url']) ?>">
     <?php endif; ?>
 </div>
 
