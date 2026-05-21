@@ -44,7 +44,6 @@ require __DIR__ . '/includes/header.php';
                 <form class="admin-card" method="post">
                     <?= csrf_field() ?>
                     <h1 class="h3 fw-bold mb-3">Connexion admin</h1>
-                    <p class="text-muted">Compte par defaut: admin@dar-tunisie.tn / admin123</p>
                     <div class="mb-3">
                         <label class="form-label">Email</label>
                         <input type="email" name="email" class="form-control" required autofocus>
