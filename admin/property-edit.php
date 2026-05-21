@@ -53,6 +53,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
+    // Gestion de l'upload image — conserver l'ancienne si aucun nouveau fichier
+    $image_url = trim($_POST['image_url'] ?? $property['image_url'] ?? '');
+    try {
+        $uploaded = handle_upload('image_file');
+        if ($uploaded) {
+            $image_url = $uploaded;
+        }
+    } catch (RuntimeException $e) {
+        flash('danger', $e->getMessage());
+        redirect('admin/property-edit.php?id=' . $id);
+    }
+
     $data = [
         'id'                  => $id,
         'owner_id'            => $owner_id,
@@ -73,7 +85,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'availability_status' => $_POST['availability_status']           ?? 'available',
         'contract_ready'      => isset($_POST['contract_ready']) ? 1 : 0,
         'payment_method'      => trim($_POST['payment_method']           ?? ''),
-        'image_url'           => trim($_POST['image_url']                ?? ''),
+        'image_url'           => $image_url,
         'published'           => isset($_POST['published'])     ? 1 : 0,
     ];
 
@@ -123,7 +135,7 @@ require __DIR__ . '/../includes/header.php';
                 <a href="<?= url('admin/properties.php') ?>" class="btn btn-outline-secondary btn-sm">← Retour</a>
             </div>
 
-            <form method="post" novalidate>
+            <form method="post" enctype="multipart/form-data" novalidate>
                 <?= csrf_field() ?>
 
                 <?php require __DIR__ . '/_property-fields.php'; ?>

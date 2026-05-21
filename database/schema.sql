@@ -243,3 +243,9 @@ INSERT INTO property_features (property_id, feature) VALUES
 (4, 'Meuble'),          (4, 'Internet disponible'), (4, 'Proche transport'),
 (5, 'Cour'),            (5, 'Entree independante'), (5, 'Quartier calme'),
 (6, 'Ascenseur'),       (6, 'Parking'),          (6, 'Haut standing');
+-- ============================================================
+--  MIGRATION : ajout des colonnes logo et cover dans agency_settings
+-- ============================================================
+ALTER TABLE agency_settings
+    ADD COLUMN IF NOT EXISTS logo_url  VARCHAR(500) NULL AFTER map_embed_url,
+    ADD COLUMN IF NOT EXISTS cover_url VARCHAR(500) NULL AFTER logo_url;

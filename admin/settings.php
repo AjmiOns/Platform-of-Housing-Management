@@ -5,6 +5,31 @@ $settings  = app_settings();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     verify_csrf();
+
+    // Upload logo
+    $logo_url = $settings['logo_url'] ?? null;
+    try {
+        $uploadedLogo = handle_upload('logo_file');
+        if ($uploadedLogo) {
+            $logo_url = $uploadedLogo;
+        }
+    } catch (RuntimeException $e) {
+        flash('danger', 'Logo : ' . $e->getMessage());
+        redirect('admin/settings.php');
+    }
+
+    // Upload photo de couverture
+    $cover_url = $settings['cover_url'] ?? null;
+    try {
+        $uploadedCover = handle_upload('cover_file');
+        if ($uploadedCover) {
+            $cover_url = $uploadedCover;
+        }
+    } catch (RuntimeException $e) {
+        flash('danger', 'Couverture : ' . $e->getMessage());
+        redirect('admin/settings.php');
+    }
+
     $data = [
         'agency_name'   => trim($_POST['agency_name']   ?? ''),
         'slogan'        => trim($_POST['slogan']         ?? ''),
@@ -18,6 +43,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'facebook'      => trim($_POST['facebook']       ?? ''),
         'instagram'     => trim($_POST['instagram']      ?? ''),
         'working_hours' => trim($_POST['working_hours']  ?? ''),
+        'logo_url'      => $logo_url,
+        'cover_url'     => $cover_url,
     ];
 
     db()->prepare(
@@ -25,7 +52,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             agency_name=:agency_name, slogan=:slogan, email=:email,
             phone=:phone, whatsapp=:whatsapp, address=:address,
             city=:city, governorate=:governorate, map_embed_url=:map_embed_url,
-            facebook=:facebook, instagram=:instagram, working_hours=:working_hours
+            facebook=:facebook, instagram=:instagram, working_hours=:working_hours,
+            logo_url=:logo_url, cover_url=:cover_url
          WHERE id = 1'
     )->execute($data);
 
@@ -41,13 +69,34 @@ require __DIR__ . '/../includes/header.php';
         <?php require __DIR__ . '/_menu.php'; ?>
         <?php show_flash(); ?>
 
-        <!-- ══════════════════════════════════════════
-             FICHE ACTUELLE DE L'AGENCE
-        ══════════════════════════════════════════ -->
+        <!-- FICHE ACTUELLE -->
         <div class="admin-card mb-4">
             <h1 class="h4 mb-4">📋 Informations actuelles de l'agence</h1>
 
             <div class="row g-4">
+
+                <!-- Logo et couverture -->
+                <?php if (!empty($settings['logo_url']) || !empty($settings['cover_url'])): ?>
+                <div class="col-12">
+                    <h6 class="fw-bold text-muted border-bottom pb-2 mb-3">Visuels</h6>
+                    <div class="d-flex gap-4 align-items-start flex-wrap">
+                        <?php if (!empty($settings['logo_url'])): ?>
+                        <div>
+                            <p class="text-muted small mb-1">Logo</p>
+                            <img src="<?= h(property_image($settings['logo_url'])) ?>"
+                                 alt="Logo agence" style="max-height:80px;border-radius:6px;border:1px solid #dee2e6;">
+                        </div>
+                        <?php endif; ?>
+                        <?php if (!empty($settings['cover_url'])): ?>
+                        <div>
+                            <p class="text-muted small mb-1">Photo de couverture</p>
+                            <img src="<?= h(property_image($settings['cover_url'])) ?>"
+                                 alt="Couverture agence" style="max-height:80px;border-radius:6px;border:1px solid #dee2e6;">
+                        </div>
+                        <?php endif; ?>
+                    </div>
+                </div>
+                <?php endif; ?>
 
                 <!-- Identité -->
                 <div class="col-md-6">
@@ -152,14 +201,39 @@ require __DIR__ . '/../includes/header.php';
             </div>
         </div>
 
-        <!-- ══════════════════════════════════════════
-             FORMULAIRE DE MODIFICATION
-        ══════════════════════════════════════════ -->
+        <!-- FORMULAIRE DE MODIFICATION -->
         <div class="admin-card" id="form-settings">
             <h2 class="h4 mb-4">✏️ Modifier les paramètres</h2>
 
-            <form method="post" novalidate>
+            <form method="post" enctype="multipart/form-data" novalidate>
                 <?= csrf_field() ?>
+
+                <!-- Visuels (uploads) -->
+                <h6 class="fw-bold text-muted border-bottom pb-2 mb-3">Visuels de l'agence</h6>
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <label class="form-label">Logo de l'agence <span class="text-muted">(JPG, PNG, WEBP — max 3 MB)</span></label>
+                        <input type="file" name="logo_file" class="form-control" accept=".jpg,.jpeg,.png,.webp">
+                        <?php if (!empty($settings['logo_url'])): ?>
+                            <div class="mt-2 d-flex align-items-center gap-2">
+                                <img src="<?= h(property_image($settings['logo_url'])) ?>"
+                                     alt="Logo actuel" style="max-height:50px;border-radius:4px;">
+                                <span class="text-muted small">Laisser vide pour conserver.</span>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Photo de couverture <span class="text-muted">(JPG, PNG, WEBP — max 3 MB)</span></label>
+                        <input type="file" name="cover_file" class="form-control" accept=".jpg,.jpeg,.png,.webp">
+                        <?php if (!empty($settings['cover_url'])): ?>
+                            <div class="mt-2 d-flex align-items-center gap-2">
+                                <img src="<?= h(property_image($settings['cover_url'])) ?>"
+                                     alt="Couverture actuelle" style="max-height:50px;border-radius:4px;">
+                                <span class="text-muted small">Laisser vide pour conserver.</span>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                </div>
 
                 <!-- Identité -->
                 <h6 class="fw-bold text-muted border-bottom pb-2 mb-3">Identité</h6>
@@ -247,7 +321,7 @@ require __DIR__ . '/../includes/header.php';
                         <input type="text" name="instagram" class="form-control"
                                value="<?= h($settings['instagram']) ?>"
                                placeholder="https://instagram.com/...">
-                    </div>
+                        </div>
                 </div>
 
                 <button type="submit" class="btn btn-primary">💾 Enregistrer les modifications</button>
