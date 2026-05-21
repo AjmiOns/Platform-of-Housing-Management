@@ -47,7 +47,7 @@ $isAdminPage = str_starts_with($currentPath, 'admin/');
                     <li class="nav-item"><a class="nav-link <?= $isAdminPage ? 'active' : '' ?>" href="<?= url('admin/dashboard.php') ?>">Admin</a></li>
                     <li class="nav-item"><a class="btn btn-outline-dark btn-sm ms-lg-2" href="<?= url('logout.php') ?>">Deconnexion</a></li>
                 <?php else: ?>
-                    <li class="nav-item"><a class="btn btn-primary btn-sm ms-lg-2" href="<?= url('register.php') ?>">Espace admin</a></li>
+                    <li class="nav-item"><a class="btn btn-primary btn-sm ms-lg-2" href="<?= url('login.php') ?>">Espace admin</a></li>
                 <?php endif; ?>
             </ul>
         </div>
