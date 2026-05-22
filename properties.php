@@ -93,39 +93,7 @@ require __DIR__ . '/includes/header.php';
             </div>
         </form>
 
-        <!-- ══════════════════════════════════════════════
-             RECHERCHE INSTANTANÉE via fetch() → API REST
-             Consomme : api/properties.php
-        ══════════════════════════════════════════════ -->
-        <div class="admin-card mb-5" id="live-search-box">
-            <div class="d-flex align-items-center gap-2 mb-3">
-                <span style="font-size:1.1rem">⚡</span>
-                <h6 class="mb-0 fw-semibold">Recherche instantanée</h6>
-                <span class="badge bg-primary ms-1" style="font-size:.7rem">API</span>
-            </div>
-            <div class="row g-2 align-items-center">
-                <div class="col-md-8">
-                    <input
-                        id="live-q"
-                        type="text"
-                        class="form-control"
-                        placeholder="Tapez un mot-clé, ville, adresse… les résultats s'affichent en temps réel"
-                    >
-                </div>
-                <div class="col-md-4">
-                    <span id="live-count" class="text-muted small"></span>
-                </div>
-            </div>
-            <div id="live-results" class="row g-3 mt-2"></div>
-        </div>
-
-        <!-- ══════════════════════════════════════════════
-             RÉSULTATS PHP (filtre classique)
-        ══════════════════════════════════════════════ -->
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 class="h4 mb-0"><?= count($properties) ?> resultat(s)</h2>
-            <a href="<?= url('properties.php') ?>" class="btn btn-sm btn-outline-secondary">Reinitialiser</a>
-        </div>
+       
 
         <?php if (!$properties): ?>
             <div class="alert alert-info">Aucun bien ne correspond a votre recherche.</div>
