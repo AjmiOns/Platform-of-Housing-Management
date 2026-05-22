@@ -249,3 +249,40 @@ INSERT INTO property_features (property_id, feature) VALUES
 ALTER TABLE agency_settings
     ADD COLUMN IF NOT EXISTS logo_url  VARCHAR(500) NULL AFTER map_embed_url,
     ADD COLUMN IF NOT EXISTS cover_url VARCHAR(500) NULL AFTER logo_url;
+-- ============================================================
+--  MIGRATION : Système utilisateur (clients) - Dar Tunisie
+--  À exécuter après schema.sql existant
+-- ============================================================
+
+-- Table clients (utilisateurs publics, distinct de users=admin)
+CREATE TABLE IF NOT EXISTS clients (
+  id            INT AUTO_INCREMENT PRIMARY KEY,
+  nom           VARCHAR(120)  NOT NULL,
+  email         VARCHAR(160)  NOT NULL UNIQUE,
+  telephone     VARCHAR(30)   NULL,
+  password_hash VARCHAR(255)  NOT NULL,
+  avatar        VARCHAR(500)  NULL,
+  email_verified TINYINT(1)   NOT NULL DEFAULT 0,
+  created_at    TIMESTAMP     DEFAULT CURRENT_TIMESTAMP,
+  updated_at    TIMESTAMP     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- Table favoris
+CREATE TABLE IF NOT EXISTS favorites (
+  id          INT AUTO_INCREMENT PRIMARY KEY,
+  client_id   INT NOT NULL,
+  property_id INT NOT NULL,
+  created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE KEY uq_favorite (client_id, property_id),
+  CONSTRAINT fk_fav_client   FOREIGN KEY (client_id)   REFERENCES clients(id)    ON DELETE CASCADE,
+  CONSTRAINT fk_fav_property FOREIGN KEY (property_id) REFERENCES properties(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+-- Ajout colonne client_id dans visit_requests (lien optionnel si connecté)
+ALTER TABLE visit_requests
+  ADD COLUMN IF NOT EXISTS client_id INT NULL AFTER property_id,
+  ADD CONSTRAINT fk_visit_client FOREIGN KEY (client_id) REFERENCES clients(id) ON DELETE SET NULL;
+
+-- Index pour performance
+CREATE INDEX IF NOT EXISTS idx_favorites_client ON favorites(client_id);
+CREATE INDEX IF NOT EXISTS idx_visit_client ON visit_requests(client_id);
