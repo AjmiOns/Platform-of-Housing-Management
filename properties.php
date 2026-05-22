@@ -22,8 +22,11 @@ if (!empty($_GET['max_price'])) {
     $params['max_price'] = (float) $_GET['max_price'];
 }
 if (!empty($_GET['q'])) {
-    $where[] = '(p.title LIKE :q OR p.description LIKE :q OR p.address LIKE :q)';
-    $params['q'] = '%' . $_GET['q'] . '%';
+    $where[] = '(p.title LIKE :q1 OR p.description LIKE :q2 OR p.address LIKE :q3)';
+    $qVal = '%' . $_GET['q'] . '%';
+    $params['q1'] = $qVal;
+    $params['q2'] = $qVal;
+    $params['q3'] = $qVal;
 }
 
 $sql = 'SELECT p.*, c.name AS category_name
@@ -48,7 +51,11 @@ require __DIR__ . '/includes/header.php';
 <section class="section-padding">
     <div class="container">
         <?php show_flash(); ?>
-        <form class="admin-card mb-5" method="get">
+
+        <!-- ══════════════════════════════════════════════
+             FILTRE CLASSIQUE (PHP — rechargement de page)
+        ══════════════════════════════════════════════ -->
+        <form class="admin-card mb-4" method="get">
             <div class="row g-3 align-items-end">
                 <div class="col-md-3">
                     <label class="form-label">Mot-cle</label>
@@ -86,6 +93,35 @@ require __DIR__ . '/includes/header.php';
             </div>
         </form>
 
+        <!-- ══════════════════════════════════════════════
+             RECHERCHE INSTANTANÉE via fetch() → API REST
+             Consomme : api/properties.php
+        ══════════════════════════════════════════════ -->
+        <div class="admin-card mb-5" id="live-search-box">
+            <div class="d-flex align-items-center gap-2 mb-3">
+                <span style="font-size:1.1rem">⚡</span>
+                <h6 class="mb-0 fw-semibold">Recherche instantanée</h6>
+                <span class="badge bg-primary ms-1" style="font-size:.7rem">API</span>
+            </div>
+            <div class="row g-2 align-items-center">
+                <div class="col-md-8">
+                    <input
+                        id="live-q"
+                        type="text"
+                        class="form-control"
+                        placeholder="Tapez un mot-clé, ville, adresse… les résultats s'affichent en temps réel"
+                    >
+                </div>
+                <div class="col-md-4">
+                    <span id="live-count" class="text-muted small"></span>
+                </div>
+            </div>
+            <div id="live-results" class="row g-3 mt-2"></div>
+        </div>
+
+        <!-- ══════════════════════════════════════════════
+             RÉSULTATS PHP (filtre classique)
+        ══════════════════════════════════════════════ -->
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h2 class="h4 mb-0"><?= count($properties) ?> resultat(s)</h2>
             <a href="<?= url('properties.php') ?>" class="btn btn-sm btn-outline-secondary">Reinitialiser</a>
@@ -122,5 +158,109 @@ require __DIR__ . '/includes/header.php';
         </div>
     </div>
 </section>
+
+<!-- ══════════════════════════════════════════════
+     SCRIPT fetch() — consomme api/properties.php
+     Placé avant footer pour que le DOM soit prêt
+══════════════════════════════════════════════ -->
+<script>
+(function () {
+    'use strict';
+
+    const input    = document.getElementById('live-q');
+    const results  = document.getElementById('live-results');
+    const countEl  = document.getElementById('live-count');
+    let   timer    = null;
+
+    // URL de l'API construite depuis la base du site
+    const API_URL = '<?= url('api/properties.php') ?>';
+
+    /**
+     * Appel fetch() vers api/properties.php
+     */
+    async function searchAPI(q) {
+        const url = new URL(API_URL);
+        url.searchParams.set('q', q);
+
+        try {
+            const response = await fetch(url.href);
+
+            if (!response.ok) {
+                throw new Error('Erreur réseau : ' + response.status);
+            }
+
+            const json = await response.json();
+            renderResults(json.data, json.count);
+
+        } catch (error) {
+            results.innerHTML = '<div class="col-12"><div class="alert alert-danger">Impossible de contacter l\'API.</div></div>';
+            countEl.textContent = '';
+        }
+    }
+
+    /**
+     * Affiche les cartes retournées par l'API
+     */
+    function renderResults(properties, count) {
+        countEl.textContent = count + ' résultat(s) via API';
+
+        if (!properties || properties.length === 0) {
+            results.innerHTML = '<div class="col-12"><p class="text-muted">Aucun bien trouvé.</p></div>';
+            return;
+        }
+
+        results.innerHTML = properties.map(function (p) {
+            var statusClass = { available: 'success', reserved: 'warning', rented: 'secondary' }[p.availability_status] || 'secondary';
+            var statusLabel = { available: 'Disponible', reserved: 'Réservé', rented: 'Loué' }[p.availability_status] || p.availability_status;
+            var price       = parseInt(p.rent_price).toLocaleString('fr-TN') + ' TND';
+            var image       = p.image_url && p.image_url.startsWith('http') ? p.image_url : '<?= url('public/assets/images/property-placeholder.svg') ?>';
+            var detailUrl   = '<?= url('property-details.php') ?>?id=' + p.id;
+
+            return '<div class="col-md-6 col-lg-4">'
+                + '<div class="card property-card">'
+                + '<img src="' + image + '" class="property-image" alt="' + escHtml(p.title) + '">'
+                + '<div class="card-body">'
+                + '<div class="d-flex justify-content-between align-items-center mb-2">'
+                + '<span class="badge badge-category">' + escHtml(p.category_name || '') + '</span>'
+                + '<span class="badge text-bg-' + statusClass + '">' + statusLabel + '</span>'
+                + '</div>'
+                + '<h5><a href="' + detailUrl + '" class="text-dark text-decoration-none">' + escHtml(p.title) + '</a></h5>'
+                + '<p class="text-muted"><i class="fa-solid fa-location-dot"></i> ' + escHtml(p.address || '') + '</p>'
+                + '<div class="price mb-3">' + price + ' / mois</div>'
+                + '<a href="' + detailUrl + '" class="btn btn-primary w-100 mt-2">Voir détails</a>'
+                + '</div></div></div>';
+        }).join('');
+    }
+
+    /**
+     * Échappe les caractères HTML pour éviter XSS
+     */
+    function escHtml(str) {
+        return String(str || '').replace(/[&<>"']/g, function (c) {
+            return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+        });
+    }
+
+    /**
+     * Écoute la frappe avec debounce 400ms
+     */
+    input.addEventListener('input', function () {
+        clearTimeout(timer);
+        results.innerHTML = '';
+        countEl.textContent = '';
+
+        var q = input.value.trim();
+
+        if (q.length < 2) return;
+
+        countEl.textContent = 'Recherche…';
+
+        timer = setTimeout(function () {
+            searchAPI(q);
+        }, 400);
+    });
+
+})();
+</script>
 
 <?php require __DIR__ . '/includes/footer.php'; ?>
