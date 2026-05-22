@@ -19,6 +19,7 @@ function h(?string $value): string
 {
     return htmlspecialchars($value ?? '', ENT_QUOTES, 'UTF-8');
 }
+
 /**
  * Générer une URL complète du projet
  */
@@ -26,6 +27,7 @@ function url(string $path = ''): string
 {
     return APP_BASE . '/' . ltrim($path, '/');
 }
+
 /**
  * Rediriger vers une autre page
  */
@@ -34,6 +36,7 @@ function redirect(string $path): void
     header('Location: ' . url($path));
     exit;
 }
+
 /**
  * Formater un montant en dinar tunisien
  */
@@ -41,29 +44,31 @@ function format_tnd(float $amount): string
 {
     return number_format($amount, 0, ',', ' ') . ' TND';
 }
+
 /**
  * Récupérer les paramètres de l'agence
  */
 function app_settings(): array
 {
     $stmt = db()->query('SELECT * FROM agency_settings WHERE id = 1');
-      // Retourner les paramètres depuis la base
+    // Retourner les paramètres depuis la base
     // Sinon retourner des valeurs par défaut
     return $stmt->fetch() ?: [
-        'agency_name' => APP_NAME,
-        'slogan' => 'Location immobiliere en Tunisie',
-        'email' => 'contact@example.tn',
-        'phone' => '+216 00 000 000',
-        'whatsapp' => '+216 00 000 000',
-        'address' => 'Tunis',
-        'city' => 'Tunis',
-        'governorate' => 'Tunis',
+        'agency_name'   => APP_NAME,
+        'slogan'        => 'Location immobiliere en Tunisie',
+        'email'         => 'contact@example.tn',
+        'phone'         => '+216 00 000 000',
+        'whatsapp'      => '+216 00 000 000',
+        'address'       => 'Tunis',
+        'city'          => 'Tunis',
+        'governorate'   => 'Tunis',
         'map_embed_url' => '',
-        'facebook' => '#',
-        'instagram' => '#',
-        'working_hours' => 'Lundi - Samedi : 09:00 - 18:00'
+        'facebook'      => '#',
+        'instagram'     => '#',
+        'working_hours' => 'Lundi - Samedi : 09:00 - 18:00',
     ];
 }
+
 /**
  * Récupérer toutes les catégories
  */
@@ -71,6 +76,7 @@ function categories(): array
 {
     return db()->query('SELECT * FROM categories ORDER BY name ASC')->fetchAll();
 }
+
 /**
  * Récupérer tous les propriétaires
  */
@@ -78,6 +84,7 @@ function owners(): array
 {
     return db()->query('SELECT * FROM owners ORDER BY full_name ASC')->fetchAll();
 }
+
 /**
  * Retourner la liste des gouvernorats tunisiens
  */
@@ -87,9 +94,10 @@ function governorates(): array
         'Ariana', 'Beja', 'Ben Arous', 'Bizerte', 'Gabes', 'Gafsa', 'Jendouba',
         'Kairouan', 'Kasserine', 'Kebili', 'Kef', 'Mahdia', 'Manouba', 'Medenine',
         'Monastir', 'Nabeul', 'Sfax', 'Sidi Bouzid', 'Siliana', 'Sousse', 'Tataouine',
-        'Tozeur', 'Tunis', 'Zaghouan'
+        'Tozeur', 'Tunis', 'Zaghouan',
     ];
 }
+
 /**
  * Retourner le texte correspondant au statut du bien
  */
@@ -97,11 +105,12 @@ function status_label(string $status): string
 {
     return match ($status) {
         'available' => 'Disponible',
-        'reserved' => 'Reserve',
-        'rented' => 'Loue',
-        default => $status,
+        'reserved'  => 'Reserve',
+        'rented'    => 'Loue',
+        default     => $status,
     };
 }
+
 /**
  * Retourner la classe Bootstrap correspondant au statut
  */
@@ -109,11 +118,12 @@ function status_class(string $status): string
 {
     return match ($status) {
         'available' => 'success',
-        'reserved' => 'warning',
-        'rented' => 'secondary',
-        default => 'secondary',
+        'reserved'  => 'warning',
+        'rented'    => 'secondary',
+        default     => 'secondary',
     };
 }
+
 /**
  * Générer un token CSRF sécurisé
  */
@@ -125,6 +135,7 @@ function csrf_token(): string
     }
     return $_SESSION['csrf_token'];
 }
+
 /**
  * Générer le champ HTML CSRF
  */
@@ -132,17 +143,19 @@ function csrf_field(): string
 {
     return '<input type="hidden" name="csrf_token" value="' . h(csrf_token()) . '">';
 }
+
 /**
  * Vérifier la validité du token CSRF
  */
 function verify_csrf(): void
 {
     $token = $_POST['csrf_token'] ?? '';
-     // Vérification du token
+    // Vérification du token
     if (!$token || !hash_equals($_SESSION['csrf_token'] ?? '', $token)) {
         die('Session expiree ou formulaire invalide. Rechargez la page.');
     }
 }
+
 /**
  * Créer un message flash temporaire
  */
@@ -150,6 +163,7 @@ function flash(string $type, string $message): void
 {
     $_SESSION['flash'] = ['type' => $type, 'message' => $message];
 }
+
 /**
  * Afficher les messages flash
  */
@@ -157,14 +171,15 @@ function show_flash(): void
 {
     if (!empty($_SESSION['flash'])) {
         $flash = $_SESSION['flash'];
-         // Supprimer le message après affichage
+        // Supprimer le message après affichage
         unset($_SESSION['flash']);
-         // Affichage Bootstrap
+        // Affichage Bootstrap
         echo '<div class="alert alert-' . h($flash['type']) . ' alert-dismissible fade show" role="alert">'
-            . h($flash['message']) .
-            '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>';
+            . h($flash['message'])
+            . '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>';
     }
 }
+
 /**
  * Vérifier si un administrateur est connecté
  */
@@ -172,6 +187,7 @@ function is_admin(): bool
 {
     return !empty($_SESSION['user']);
 }
+
 /**
  * Retourner les informations de l'utilisateur connecté
  */
@@ -179,16 +195,18 @@ function current_user(): ?array
 {
     return $_SESSION['user'] ?? null;
 }
+
 /**
  * Forcer l'accès administrateur
  */
 function require_admin(): void
 {
     if (!is_admin()) {
-          // Redirection si non connecté
+        // Redirection si non connecté
         redirect('login.php');
     }
 }
+
 /**
  * Retourner l'image d'un bien immobilier
  */
@@ -198,54 +216,73 @@ function property_image(?string $imageUrl): string
     if (!$imageUrl) {
         return url('public/assets/images/property-placeholder.svg');
     }
-    // Si image externe
+    // Si image externe (URL http/https)
     if (str_starts_with($imageUrl, 'http')) {
         return $imageUrl;
     }
-    // Sinon image locale
+    // Sinon image locale uploadée
     return url($imageUrl);
 }
 
 /**
- * Gérer le téléchargement d'une image
+ * Gérer le téléchargement d'une image dans un sous-dossier organisé.
+ *
+ * @param string $fieldName  Nom du champ <input type="file">
+ * @param string $subfolder  Sous-dossier dans public/uploads/
+ *                           Exemples : 'propertyImages', 'agencyLogo', 'agencyCover'
+ * @return string|null       Chemin relatif à stocker en DB, ou null si pas de fichier
+ *
+ * Structure résultante :
+ *   public/uploads/propertyImages/propertyImages_abc123.jpg
+ *   public/uploads/agencyLogo/agencyLogo_def456.png
+ *   public/uploads/agencyCover/agencyCover_ghi789.webp
  */
-function handle_upload(string $fieldName): ?string
+function handle_upload(string $fieldName, string $subfolder = 'general'): ?string
 {
-    // Vérifier si aucun fichier envoyé
+    // Aucun fichier envoyé
     if (empty($_FILES[$fieldName]['name']) || $_FILES[$fieldName]['error'] === UPLOAD_ERR_NO_FILE) {
         return null;
     }
- // Vérifier les erreurs d'upload
+
+    // Erreur pendant le transfert
     if ($_FILES[$fieldName]['error'] !== UPLOAD_ERR_OK) {
         throw new RuntimeException('Erreur pendant le telechargement de l\'image.');
     }
- // Extensions autorisées
-    $allowed = ['jpg', 'jpeg', 'png', 'webp'];
-     // Récupérer l'extension du fichier
+
+    // Extensions autorisées
+    $allowed   = ['jpg', 'jpeg', 'png', 'webp'];
     $extension = strtolower(pathinfo($_FILES[$fieldName]['name'], PATHINFO_EXTENSION));
-// Vérifier l'extension
+
+    // Vérifier l'extension
     if (!in_array($extension, $allowed, true)) {
         throw new RuntimeException('Format image non autorise. Utilisez JPG, PNG ou WEBP.');
     }
-// Vérifier la taille maximale : 3 MB
+
+    // Vérifier la taille maximale : 3 MB
     if ($_FILES[$fieldName]['size'] > 3 * 1024 * 1024) {
-        throw new RuntimeException('Image trop grande. Taille maximale: 3 MB.');
+        throw new RuntimeException('Image trop grande. Taille maximale : 3 MB.');
     }
-// Créer le dossier upload s'il n'existe pas
-    if (!is_dir(UPLOAD_DIR)) {
-        mkdir(UPLOAD_DIR, 0775, true);
+
+    // Créer le sous-dossier s'il n'existe pas
+    $uploadDir = UPLOAD_DIR . $subfolder . DIRECTORY_SEPARATOR;
+
+    if (!is_dir($uploadDir)) {
+        mkdir($uploadDir, 0775, true);
     }
-// Générer un nom unique pour l'image
-    $filename = uniqid('bien_', true) . '.' . $extension;
-     // Chemin destination
-    $destination = UPLOAD_DIR . $filename;
- // Déplacer le fichier uploadé
+
+    // Générer un nom unique pour éviter les collisions
+    $filename    = uniqid($subfolder . '_', true) . '.' . $extension;
+    $destination = $uploadDir . $filename;
+
+    // Déplacer le fichier uploadé
     if (!move_uploaded_file($_FILES[$fieldName]['tmp_name'], $destination)) {
         throw new RuntimeException('Impossible d\'enregistrer l\'image.');
     }
-// Retourner le chemin enregistré
-    return 'public/uploads/' . $filename;
+
+    // Retourner le chemin relatif stocké en base de données
+    return 'public/uploads/' . $subfolder . '/' . $filename;
 }
+
 /**
  * Récupérer un bien immobilier par ID
  */
@@ -259,17 +296,20 @@ function get_property(int $id): ?array
          LEFT JOIN owners o ON o.id = p.owner_id
          WHERE p.id = :id'
     );
-     // Exécuter la requête
+    // Exécuter la requête
     $stmt->execute(['id' => $id]);
-     // Retourner le résultat
+    // Retourner le résultat
     return $stmt->fetch() ?: null;
 }
+
 /**
  * Récupérer les caractéristiques d'un bien
  */
 function get_property_features(int $propertyId): array
 {
-    $stmt = db()->prepare('SELECT feature FROM property_features WHERE property_id = :property_id ORDER BY id ASC');
+    $stmt = db()->prepare(
+        'SELECT feature FROM property_features WHERE property_id = :property_id ORDER BY id ASC'
+    );
     // Exécuter la requête
     $stmt->execute(['property_id' => $propertyId]);
     // Retourner uniquement les features
