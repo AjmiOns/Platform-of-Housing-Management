@@ -142,12 +142,11 @@ projet_js/
 │   │   └── user-dashboard.css
 │   │
 │   ├── images/
-│   │   
+│   │
 │   ├── js/
 │   │   └── jquery.custom.js
 │   │
 │   └── webfonts/
-│
 ├── config/
 │   ├── config.php
 │   └── database.php
@@ -173,7 +172,6 @@ projet_js/
 │       ├── agencyCover/
 │       ├── agencyLogo/
 │       └── propertyImages/
-│           └── propertyImages_6a100daa3fbc69.28653420.jpg
 │
 ├── user/
 │   ├── _layout_bottom.php
