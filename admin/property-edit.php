@@ -58,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Gestion de l'upload image — conserver l'ancienne si aucun nouveau fichier
     $image_url = trim($_POST['image_url'] ?? $property['image_url'] ?? '');
     try {
-        $uploaded = handle_upload('image_file');
+        $uploaded = handle_upload('image_file', 'propertyImages');
         if ($uploaded) {
             $image_url = $uploaded;
         }

@@ -49,9 +49,13 @@ $visitStatuses = db()->query(
 
 // 5 dernières visites
 $latestVisits = db()->query(
-    'SELECT v.*, p.title AS property_title
+    'SELECT v.*, 
+            p.title AS property_title,
+            c.nom AS client_name,
+            c.telephone AS client_phone
      FROM visit_requests v
      JOIN properties p ON p.id = v.property_id
+     JOIN clients c ON c.id = v.client_id
      ORDER BY v.created_at DESC
      LIMIT 5'
 )->fetchAll();
@@ -266,22 +270,43 @@ require __DIR__ . '/../includes/header.php';
             <tbody>
             <?php if ($latestVisits): ?>
                 <?php foreach ($latestVisits as $visit): ?>
-                <tr>
-                    <td>
-                        <strong><?= h($visit['full_name']) ?></strong><br>
-                        <span style="color:#94a3b8;font-size:.8rem"><?= h($visit['phone']) ?></span>
-                    </td>
-                    <td><?= h($visit['property_title']) ?></td>
-                    <td><?= h($visit['visit_date']) ?> à <?= h(substr($visit['visit_time'], 0, 5)) ?></td>
-                    <td>
-                        <?php
-                        $labels = ['new'=>'Nouveau','confirmed'=>'Confirmé','cancelled'=>'Annulé','done'=>'Effectué'];
-                        $cls    = 'status-' . $visit['status'];
-                        ?>
-                        <span class="status-pill <?= $cls ?>"><?= $labels[$visit['status']] ?? $visit['status'] ?></span>
-                    </td>
-                </tr>
-                <?php endforeach; ?>
+<tr>
+
+    <td>
+        <strong><?= h($visit['client_name']) ?></strong><br>
+
+        <span style="font-size:.85rem;color:#64748b">
+            <?= h($visit['client_phone']) ?>
+        </span>
+    </td>
+
+    <td>
+        <?= h($visit['property_title']) ?>
+    </td>
+
+    <td>
+        <?= h($visit['visit_date']) ?>
+    </td>
+
+    <td>
+        <?php
+        $labels = [
+            'new' => 'Nouveau',
+            'confirmed' => 'Confirmé',
+            'cancelled' => 'Annulé',
+            'done' => 'Effectué'
+        ];
+
+        $cls = 'status-' . $visit['status'];
+        ?>
+
+        <span class="status-pill <?= $cls ?>">
+            <?= $labels[$visit['status']] ?? $visit['status'] ?>
+        </span>
+    </td>
+
+</tr>
+<?php endforeach; ?>
             <?php else: ?>
                 <tr><td colspan="4" style="color:#94a3b8;text-align:center;padding:2rem 0">Aucune demande de visite.</td></tr>
             <?php endif; ?>

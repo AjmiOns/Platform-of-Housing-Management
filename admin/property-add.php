@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Gestion de l'upload image
     $image_url = null;
     try {
-        $uploaded = handle_upload('image_file');
+        $uploaded = handle_upload('image_file', 'propertyImages');
         if ($uploaded) {
             $image_url = $uploaded;
         }
@@ -112,4 +112,4 @@ require __DIR__ . '/../includes/header.php';
 </section>
 
 <?php require __DIR__ . '/../includes/footer.php';
- ?>
+ ?>  

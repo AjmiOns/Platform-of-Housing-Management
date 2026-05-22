@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Upload logo
     $logo_url = $settings['logo_url'] ?? null;
     try {
-        $uploadedLogo = handle_upload('logo_file');
+        $uploadedLogo = handle_upload('logo_file', 'agencyLogo');
         if ($uploadedLogo) {
             $logo_url = $uploadedLogo;
         }
@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Upload photo de couverture
     $cover_url = $settings['cover_url'] ?? null;
     try {
-        $uploadedCover = handle_upload('cover_file');
+        $uploadedCover = handle_upload('cover_file', 'agencyCover');
         if ($uploadedCover) {
             $cover_url = $uploadedCover;
         }

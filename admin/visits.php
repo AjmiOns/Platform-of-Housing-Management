@@ -15,9 +15,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 $visits = db()->query(
-    'SELECT v.*, p.title AS property_title, p.city, p.governorate
+    'SELECT 
+        v.*,
+        p.title AS property_title,
+        p.city,
+        p.governorate,
+
+        c.nom AS client_name,
+        c.telephone AS client_phone,
+        c.email AS client_email
+
      FROM visit_requests v
-     JOIN properties p ON p.id = v.property_id
+
+     JOIN properties p 
+        ON p.id = v.property_id
+
+     JOIN clients c 
+        ON c.id = v.client_id
+
      ORDER BY v.created_at DESC'
 )->fetchAll();
 require __DIR__ . '/../includes/header.php';
@@ -36,15 +51,17 @@ require __DIR__ . '/../includes/header.php';
                     <?php foreach ($visits as $visit): ?>
                         <tr>
                             <td>
-                                <strong><?= h($visit['full_name']) ?></strong><br>
-                                <small><?= h($visit['phone']) ?></small><br>
-                                <small><?= h($visit['email'] ?: '-') ?></small>
+                               <strong><?= h($visit['client_name']) ?></strong><br>
+
+<small><?= h($visit['client_phone']) ?></small><br>
+
+<small><?= h($visit['client_email'] ?: '-') ?></small>
                             </td>
                             <td>
                                 <?= h($visit['property_title']) ?><br>
                                 <small class="text-muted"><?= h($visit['city']) ?>, <?= h($visit['governorate']) ?></small>
                             </td>
-                            <td><?= h($visit['visit_date']) ?> a <?= h(substr($visit['visit_time'], 0, 5)) ?></td>
+                            <td><?= h($visit['visit_date']) ?></td>
                             <td style="max-width:300px"><?= nl2br(h($visit['message'] ?: '-')) ?></td>
                             <td>
                                 <form method="post" class="d-flex gap-2">
