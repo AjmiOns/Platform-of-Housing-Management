@@ -116,38 +116,87 @@ Vous pouvez ajouter, modifier ou supprimer des biens.
 ## Structure
 
 ```txt
-tunisie-logement/
+projet_js/
 ├── admin/
 │   ├── _menu.php
+│   ├── _property-fields.php
 │   ├── dashboard.php
 │   ├── messages.php
 │   ├── properties.php
+│   ├── property-add.php
 │   ├── property-delete.php
-│   ├── property-form.php
+│   ├── property-edit.php
 │   ├── settings.php
 │   └── visits.php
+│
+├── api/
+│   └── properties.php
+│
+├── assets/
+│   ├── css/
+│   │   ├── animate.css
+│   │   ├── flex-slider.css
+│   │   ├── fontawesome.css
+│   │   ├── owl.css
+│   │   ├── templatemo-villa-agency.css
+│   │   └── user-dashboard.css
+│   │
+│   ├── images/
+│   │   
+│   ├── js/
+│   │   └── jquery.custom.js
+│   │
+│   └── webfonts/
+│
 ├── config/
 │   ├── config.php
 │   └── database.php
+│
 ├── database/
 │   └── schema.sql
+│
 ├── includes/
+│   ├── PropertyRepository.php
 │   ├── auth.php
 │   ├── footer.php
 │   ├── functions.php
-│   └── header.php
+│   ├── header.php
+│   └── user_auth.php
+│
 ├── public/
 │   ├── assets/
 │   │   ├── css/style.css
-│   │   ├── images/property-placeholder.svg
-│   │   └── js/app.js
+│   │   ├── js/app.js
+│   │   └── images/property-placeholder.svg
+│   │
 │   └── uploads/
+│       ├── agencyCover/
+│       ├── agencyLogo/
+│       └── propertyImages/
+│           └── propertyImages_6a100daa3fbc69.28653420.jpg
+│
+├── user/
+│   ├── _layout_bottom.php
+│   ├── _layout_top.php
+│   ├── dashboard.php
+│   ├── favoris.php
+│   ├── login.php
+│   ├── logout.php
+│   ├── mes-visites.php
+│   ├── profil.php
+│   ├── register.php
+│   └── toggle-favori.php
+│
+├── admin/ (pages principales déjà incluses ci-dessus)
 ├── contact.php
 ├── index.php
 ├── login.php
 ├── logout.php
+├── register.php
 ├── properties.php
-└── property-details.php
+├── properties.php (root si utilisé)
+├── property-details.php
+└── README.md
 ```
 
 ## Notes techniques
