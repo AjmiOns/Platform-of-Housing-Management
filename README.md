@@ -1,201 +1,195 @@
-# Dar Tunisie — Real Estate Management Platform
+<div align="center">
 
-A full-stack PHP/MySQL platform for a real estate agency operating in Tunisia, covering the public listing site, a client area (accounts, favorites, visit requests) and an admin back-office (property CRUD, visit/message management, agency settings).
+# 🏠 Dar Tunisie
 
-Built as an academic project and hardened toward production-grade practices: input validation, CSRF protection, upload security, rate limiting, automated tests, and a documented API.
+### Plateforme de gestion immobilière — location d'appartements, villas & studios en Tunisie
 
----
+Application web full-stack pour une agence immobilière tunisienne, construite avec **PHP**, **MySQL**, **Bootstrap 5** et **JavaScript**.
 
-## Table of contents
+<br>
 
-- [Features](#features)
-- [Architecture](#architecture)
-- [Tech stack](#tech-stack)
-- [Security](#security)
-- [Getting started](#getting-started)
-- [Configuration](#configuration)
-- [Running tests](#running-tests)
-- [Project structure](#project-structure)
-- [API reference](#api-reference)
-- [Known limitations](#known-limitations)
-- [Roadmap](#roadmap)
+![PHP](https://img.shields.io/badge/PHP-777BB4?style=for-the-badge&logo=php&logoColor=white)
+![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
+![Bootstrap](https://img.shields.io/badge/Bootstrap_5-7952B3?style=for-the-badge&logo=bootstrap&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
+![Composer](https://img.shields.io/badge/Composer-885630?style=for-the-badge&logo=composer&logoColor=white)
+![PHPUnit](https://img.shields.io/badge/PHPUnit-3776AB?style=for-the-badge&logo=php&logoColor=white)
 
----
+![Status](https://img.shields.io/badge/statut-en%20d%C3%A9veloppement-yellow?style=flat-square)
+![Responsive](https://img.shields.io/badge/design-responsive-success?style=flat-square)
+![Tests](https://img.shields.io/badge/tests-PHPUnit-blue?style=flat-square)
+![Repo size](https://img.shields.io/github/repo-size/AjmiOns/Platform-of-Housing-Management?style=flat-square&color=pink)
+![Last commit](https://img.shields.io/github/last-commit/AjmiOns/Platform-of-Housing-Management?style=flat-square&color=green)
 
-## Features
+<br>
 
-**Public site**
-- Property listing with combined filters (type, governorate, city, budget, keyword), sorting (price, date, area) and pagination — server-rendered by default, progressively enhanced with AJAX (no page reload, browser back/forward supported)
-- Property detail page with a visit-request form, gated by real-time availability (`is_property_bookable()`)
-- Contact form with server-side validation
+<img src="assets/screenshots/home.png" alt="Page d'accueil Dar Tunisie" width="90%">
 
-**Client area**
-- Registration / login, session-based auth, rate-limited against brute force
-- Favorites (add/remove via AJAX, optimistic UI)
-- Visit request history
-- Profile management (info + password change)
-
-**Admin back-office**
-- Dashboard with KPIs and charts (properties by status/category/governorate, monthly trend)
-- Property CRUD with image upload
-- Visit request management (status workflow: new → confirmed/cancelled/done), triggers a confirmation email to the client
-- Contact message inbox
-- Agency settings (branding, contact info, map embed)
-
-**Cross-cutting**
-- Transactional emails (visit confirmation, new-message notification) via PHPMailer, SMTP-configurable, fails gracefully if unconfigured
-- REST JSON API for property search (used by the AJAX filters, reusable for a future mobile client)
+</div>
 
 ---
 
-## Architecture
+## 📑 Table des matières
 
-```
-Browser
-  │
-  ├── Public pages (index, properties, property-details, contact)
-  │      → render server-side on first load
-  │      → progressively enhanced with fetch() against api/properties.php
-  │
-  ├── Client area (user/*)          ── session-based auth (includes/user_auth.php)
-  ├── Admin back-office (admin/*)   ── session-based auth (includes/auth.php)
-  │
-  └── api/properties.php            ── stateless JSON endpoint
-             │
-             ▼
-     PropertyRepository            ── Repository pattern: all property SQL lives here
-             │
-             ▼
-        Database (Singleton)       ── one PDO connection per request
-             │
-             ▼
-           MySQL
-```
-
-**Design decisions, and why:**
-
-| Decision | Rationale |
-|---|---|
-| `Database` as a Singleton | One PDO connection per request lifecycle; avoids passing `$pdo` through every function signature while keeping a single, testable access point (`Database::getInstance()`). |
-| `PropertyRepository` as a Repository | Isolates SQL from presentation. `properties.php`, `api/properties.php` and the admin CRUD pages all share the same query logic (filters, sorting, pagination) — one place to fix a bug or add an index hint. |
-| Business rules extracted as pure functions | `validate_client_registration()`, `is_property_bookable()`, `rate_limit_check()` take plain arrays/scalars in, return plain arrays/booleans out — no session, no DB. That's what makes them unit-testable in milliseconds without a database fixture (see [Running tests](#running-tests)). |
-| AJAX with server-rendered fallback | Every enhanced page (`properties.php`, `favoris.php`, `property-details.php`) still works with JavaScript disabled — the filter form submits as a normal GET, the favorite/visit forms submit as a normal POST. Progressive enhancement, not a JS-only SPA. |
-| `.env`-based configuration | Database and SMTP credentials never live in version control. `config/config.php` reads from `.env` via a small dependency-free loader (`config/env.php`), falling back to sane XAMPP defaults so the project still boots without one. |
+- [À propos](#-à-propos)
+- [Fonctionnalités](#-fonctionnalités)
+- [Aperçu](#-aperçu)
+- [Stack technique](#-stack-technique)
+- [Sécurité](#-sécurité)
+- [Structure du projet](#-structure-du-projet)
+- [Installation](#-installation)
+- [Configuration](#-configuration)
+- [Tests](#-tests)
+- [API](#-api)
+- [Pages du site](#-pages-du-site)
+- [Roadmap](#-roadmap)
+- [Contribuer](#-contribuer)
+- [Crédits](#-crédits)
+- [Auteur](#-auteur)
 
 ---
 
-## Tech stack
+## 💡 À propos
 
-- **Backend:** PHP 8.1+, PDO (prepared statements throughout)
-- **Database:** MySQL / MariaDB
-- **Frontend:** Server-rendered PHP views, Bootstrap 5, vanilla JS (`fetch`, no framework)
-- **Email:** PHPMailer (SMTP)
-- **Testing:** PHPUnit 10
-- **Dependency management:** Composer
+**Dar Tunisie** est une plateforme complète de gestion immobilière pour une agence tunisienne spécialisée dans la location d'appartements, maisons, villas et studios.
 
-No frontend build step, no framework lock-in — deliberate, given the deployment target (shared/XAMPP-style hosting typical for a small agency).
+Le projet couvre trois espaces distincts : un **site public** pour rechercher un bien et demander une visite, un **espace client** pour gérer ses favoris et suivre ses demandes, et un **back-office admin** pour gérer les biens, les visites et les messages.
+
+> 🎯 **Objectif :** proposer une base full-stack propre, sécurisée et testée — pas juste un CRUD, mais une application pensée avec de vraies pratiques d'ingénierie (validation, protection CSRF, tests unitaires, API REST).
 
 ---
 
-## Security
+## ✨ Fonctionnalités
 
-- **Auth:** passwords hashed with `password_hash()` (bcrypt, cost 12), verified with `password_verify()`. Two separate auth domains (`users` = admin, `clients` = public), never conflated.
-- **CSRF:** token required and verified on every state-changing form (`verify_csrf()`).
-- **XSS:** all output escaped through `h()` (`htmlspecialchars`); no raw `$_POST`/`$_GET` echoed into HTML.
-- **SQL injection:** 100% prepared statements; the one place a "raw" value is used (the `sort` API parameter) is resolved through a whitelist array (`PropertyRepository::SORT_OPTIONS`), never interpolated.
-- **File upload:** extension whitelist **and** real MIME-type check (`finfo_file` + `getimagesize`) — a script renamed to `.jpg` is rejected. `public/uploads/.htaccess` also disables script execution in that folder as defense in depth.
-- **Brute-force mitigation:** session-scoped rate limiting on both login forms (5 failed attempts / 15 min). See [Known limitations](#known-limitations) for its scope.
-- **Secrets:** database and SMTP credentials live in `.env` (git-ignored); `.env.example` documents every variable without exposing real values.
-
----
-
-## Getting started
-
-### Prerequisites
-- PHP ≥ 8.1 with `pdo_mysql`, `mbstring`, `fileinfo` extensions
-- MySQL / MariaDB
-- [Composer](https://getcomposer.org/) (for PHPMailer and PHPUnit)
-- XAMPP (or equivalent) for local development
-
-### Installation
-
-```bash
-# 1. Clone or copy the project into htdocs
-cp -r projet_js C:\xampp\htdocs\dar-tunisie
-
-# 2. Install PHP dependencies
-cd C:\xampp\htdocs\dar-tunisie
-composer install
-
-# 3. Configure environment
-copy .env.example .env
-# edit .env if your setup differs from the defaults (see Configuration below)
-
-# 4. Create the database and import the schema
-mysql -u root -e "CREATE DATABASE tunisie_logement CHARACTER SET utf8mb4;"
-mysql -u root tunisie_logement < database/schema.sql
-
-# 5. Start Apache + MySQL (via XAMPP Control Panel), then visit:
-#    http://localhost/dar-tunisie/index.php
-```
-
-**Default admin account** (seeded by `schema.sql`):
-```
-Email:    admin@dar-tunisie.tn
-Password: admin123
-```
-Change this before any real deployment.
-
----
-
-## Configuration
-
-All configuration lives in `.env` (copy from `.env.example`). Key variables:
-
-| Variable | Purpose | Default |
+| | Fonctionnalité | Description |
 |---|---|---|
-| `APP_BASE` | URL path prefix, must match your folder name under `htdocs` | `/projet_js` |
-| `DB_HOST`, `DB_NAME`, `DB_USER`, `DB_PASS` | Database connection | XAMPP defaults (`root`, no password) |
-| `MAIL_HOST` | SMTP host — **leave empty to disable emails entirely** | _(empty)_ |
-| `MAIL_USERNAME`, `MAIL_PASSWORD`, `MAIL_PORT`, `MAIL_ENCRYPTION` | SMTP credentials | — |
-
-To test email notifications without a real mailbox, create a free sandbox inbox at [mailtrap.io](https://mailtrap.io) and paste its SMTP credentials into `.env` — every email the app sends lands there instead of a real inbox.
+| 🏠 | **Accueil** | Recherche rapide, biens mis en avant, statistiques de l'agence |
+| 🔎 | **Catalogue de biens** | Filtres combinés (type, gouvernorat, ville, budget, mot-clé), tri (prix, date, surface) et pagination — le tout en AJAX sans rechargement de page |
+| 📄 | **Fiche bien** | Galerie, caractéristiques détaillées, formulaire de demande de visite |
+| ❤️ | **Favoris** | Ajout/retrait en un clic, sans rechargement de page |
+| 📅 | **Demande de visite** | Formulaire avec confirmation automatique par email |
+| 📬 | **Contact** | Formulaire avec notification email à l'agence |
+| 🔐 | **Espace client** | Inscription, connexion, profil, historique des visites, favoris |
+| 🛠️ | **Back-office admin** | Dashboard avec graphiques, CRUD des biens, gestion des visites et messages, paramètres de l'agence |
+| 🧪 | **Tests automatisés** | Suite PHPUnit sur la logique métier (validation, disponibilité, anti brute-force) |
+| 🔌 | **API REST** | Endpoint JSON documenté pour la recherche de biens |
+| 📱 | **Responsive** | Interface adaptée mobile, tablette et desktop |
 
 ---
 
-## Running tests
+## 📸 Aperçu
 
-```bash
-composer install   # pulls in phpunit/phpunit as a dev dependency
-composer test       # or: vendor/bin/phpunit
-```
+> Les captures ci-dessous sont à remplacer par vos propres captures d'écran une fois le projet lancé localement — placez-les dans `assets/screenshots/`.
 
-The suite (`tests/`) covers pure business-logic functions only — no database or session bootstrap required, so it runs in well under a second:
+### 🏠 Accueil
 
-| File | Covers |
+<div align="center">
+  <img src="assets/screenshots/home.png" alt="Accueil" width="100%">
+</div>
+
+<br>
+
+### 🔎 Catalogue & fiche bien
+
+<table>
+  <tr>
+    <td align="center" width="50%">
+      <img src="assets/screenshots/properties.png" alt="Catalogue de biens"><br>
+      <sub><b>Catalogue de biens (filtres + tri + pagination)</b></sub>
+    </td>
+    <td align="center" width="50%">
+      <img src="assets/screenshots/property-details.png" alt="Fiche bien"><br>
+      <sub><b>Fiche bien & demande de visite</b></sub>
+    </td>
+  </tr>
+</table>
+
+### 🔐 Espace client & back-office
+
+<table>
+  <tr>
+    <td align="center" width="33%">
+      <img src="assets/screenshots/dashboard-client.png" alt="Dashboard client"><br>
+      <sub><b>Dashboard client</b></sub>
+    </td>
+    <td align="center" width="33%">
+      <img src="assets/screenshots/dashboard-admin.png" alt="Dashboard admin"><br>
+      <sub><b>Dashboard admin (graphiques)</b></sub>
+    </td>
+    <td align="center" width="33%">
+      <img src="assets/screenshots/admin-properties.png" alt="Gestion des biens"><br>
+      <sub><b>Gestion des biens</b></sub>
+    </td>
+  </tr>
+</table>
+
+### 📬 Contact & favoris
+
+<table>
+  <tr>
+    <td align="center" width="50%">
+      <img src="assets/screenshots/contact.png" alt="Contact"><br>
+      <sub><b>Contact</b></sub>
+    </td>
+    <td align="center" width="50%">
+      <img src="assets/screenshots/favoris.png" alt="Favoris"><br>
+      <sub><b>Mes favoris</b></sub>
+    </td>
+  </tr>
+</table>
+
+---
+
+## 🛠️ Stack technique
+
+| Catégorie | Technologies |
 |---|---|
-| `ClientRegistrationValidationTest.php` | Public registration form validation rules |
-| `ProfileValidationTest.php` | Client profile update validation |
-| `PropertyAvailabilityTest.php` | `is_property_bookable()`, status label/class mapping |
-| `RateLimiterTest.php` | Brute-force throttling logic, including time-window edge cases |
-
-> Writing these tests surfaced a real bug: the visit-request `INSERT` was missing three `NOT NULL` columns (`full_name`, `phone`, `visit_time`), which meant every visit request submitted through the public site was silently failing. Fixed in `property-details.php`.
+| **Backend** | PHP 8.1+, PDO (requêtes préparées) |
+| **Base de données** | MySQL / MariaDB |
+| **Frontend** | Bootstrap 5, JavaScript vanilla (fetch API, pas de framework) |
+| **Emails** | PHPMailer (SMTP configurable) |
+| **Tests** | PHPUnit 10 |
+| **Gestion des dépendances** | Composer |
+| **Icônes & polices** | Font Awesome, Google Fonts |
+| **Environnement local** | XAMPP |
+| **Versioning** | Git & GitHub |
 
 ---
 
-## Project structure
+## 🔒 Sécurité
+
+| Mesure | Détail |
+|---|---|
+| **Mots de passe** | Hashés avec `password_hash()` (bcrypt), vérifiés avec `password_verify()` |
+| **CSRF** | Token requis et vérifié sur tous les formulaires |
+| **XSS** | Toutes les sorties échappées avec `htmlspecialchars()` |
+| **SQL Injection** | 100% requêtes préparées (PDO) |
+| **Upload d'images** | Extension **et** type MIME réel vérifiés (`finfo_file`), exécution de scripts bloquée dans le dossier uploads |
+| **Anti brute-force** | Rate limiting sur les connexions admin et client (5 tentatives / 15 min) |
+| **Secrets** | Identifiants base de données et SMTP dans `.env` (jamais versionnés) |
+
+---
+
+## 📂 Structure du projet
 
 ```
-├── admin/              Admin back-office (dashboard, property CRUD, visits, messages, settings)
-├── api/                JSON REST endpoint (properties.php)
-├── config/              config.php (constants), database.php (Singleton), env.php (.env loader)
-├── database/           schema.sql
-├── includes/           Shared logic: functions.php, PropertyRepository.php,
-│                        auth.php / user_auth.php (admin vs client sessions),
-│                        mailer.php, rate_limiter.php
-├── public/uploads/      User-uploaded images (+ .htaccess denying script execution)
-├── tests/               PHPUnit unit tests + bootstrap.php
-├── user/                Client area (dashboard, favorites, visits, profile)
+dar-tunisie/
+├── admin/                  # Back-office (dashboard, biens, visites, messages, paramètres)
+├── api/
+│   └── properties.php      # Endpoint JSON REST
+├── config/                 # Configuration (constantes, connexion DB, loader .env)
+├── database/
+│   └── schema.sql          # Schéma complet + données de démo
+├── includes/                # Logique partagée
+│   ├── PropertyRepository.php   # Pattern Repository (CRUD biens)
+│   ├── functions.php            # Fonctions utilitaires
+│   ├── mailer.php                # Emails (PHPMailer)
+│   ├── rate_limiter.php          # Anti brute-force
+│   ├── auth.php / user_auth.php  # Sessions admin / client
+├── public/
+│   └── uploads/             # Images uploadées (protégées par .htaccess)
+├── tests/                    # Tests unitaires PHPUnit
+├── user/                     # Espace client (dashboard, favoris, visites, profil)
 ├── composer.json
 ├── phpunit.xml
 └── .env.example
@@ -203,57 +197,189 @@ The suite (`tests/`) covers pure business-logic functions only — no database o
 
 ---
 
-## API reference
+## 🚀 Installation
+
+### Prérequis
+
+- [XAMPP](https://www.apachefriends.org/) (ou tout serveur PHP + MySQL)
+- PHP ≥ 8.1 avec les extensions `pdo_mysql`, `mbstring`, `fileinfo`
+- [Composer](https://getcomposer.org/)
+
+### 1. Cloner le dépôt
+
+```bash
+git clone https://github.com/AjmiOns/Platform-of-Housing-Management.git
+cd Platform-of-Housing-Management
+```
+
+### 2. Installer les dépendances
+
+```bash
+composer install
+```
+
+### 3. Configurer l'environnement
+
+```bash
+copy .env.example .env
+```
+
+Éditez `.env` si votre configuration diffère des valeurs par défaut (voir [Configuration](#-configuration)).
+
+### 4. Créer la base de données
+
+```bash
+mysql -u root -e "CREATE DATABASE tunisie_logement CHARACTER SET utf8mb4;"
+mysql -u root tunisie_logement < database/schema.sql
+```
+
+### 5. Lancer le projet
+
+Démarrez **Apache** et **MySQL** depuis le panneau XAMPP, puis :
+
+👉 `http://localhost/dar-tunisie/index.php`
+
+**Compte admin par défaut** (créé par `schema.sql`) :
+```
+Email    : admin@dar-tunisie.tn
+Password : admin123
+```
+⚠️ À changer avant toute mise en production.
+
+---
+
+## ⚙️ Configuration
+
+Variables principales du fichier `.env` :
+
+| Variable | Rôle | Valeur par défaut |
+|---|---|---|
+| `APP_BASE` | Préfixe d'URL, doit correspondre au nom de votre dossier dans `htdocs` | `/projet_js` |
+| `DB_HOST`, `DB_NAME`, `DB_USER`, `DB_PASS` | Connexion à la base de données | valeurs XAMPP par défaut |
+| `MAIL_HOST` | Serveur SMTP — laissez vide pour désactiver les emails | *(vide)* |
+| `MAIL_USERNAME`, `MAIL_PASSWORD`, `MAIL_PORT`, `MAIL_ENCRYPTION` | Identifiants SMTP | — |
+
+💡 Pour tester les emails sans vraie boîte mail, créez une boîte gratuite sur [mailtrap.io](https://mailtrap.io) et collez ses identifiants SMTP dans `.env`.
+
+---
+
+## 🧪 Tests
+
+```bash
+composer install
+composer test
+```
+
+La suite de tests couvre la logique métier pure (validation, disponibilité, anti brute-force) — aucune base de données requise, exécution en moins d'une seconde :
+
+| Fichier | Couvre |
+|---|---|
+| `ClientRegistrationValidationTest.php` | Règles de validation de l'inscription |
+| `ProfileValidationTest.php` | Validation de la mise à jour du profil |
+| `PropertyAvailabilityTest.php` | Disponibilité d'un bien pour une visite |
+| `RateLimiterTest.php` | Logique anti brute-force |
+
+---
+
+## 🔌 API
 
 `GET /api/properties.php`
 
-| Param | Type | Description |
+| Paramètre | Type | Description |
 |---|---|---|
-| `id` | int | Return a single property (with features) instead of a list |
-| `q` | string | Full-text search across title, description, address |
-| `category` | string | Category slug |
-| `governorate` | string | Exact match |
-| `city` | string | Partial match |
-| `max_price` | float | Upper bound on `rent_price` |
-| `sort` | string | `relevance` (default) \| `newest` \| `oldest` \| `price_asc` \| `price_desc` \| `area_desc` |
-| `page`, `per_page` | int | Pagination (`per_page` capped at 50) |
+| `id` | int | Retourne un bien précis (avec ses équipements) |
+| `q` | string | Recherche full-text (titre, description, adresse) |
+| `category` | string | Slug de catégorie |
+| `governorate` | string | Gouvernorat |
+| `city` | string | Ville (recherche partielle) |
+| `max_price` | float | Budget maximum |
+| `sort` | string | `relevance` \| `newest` \| `price_asc` \| `price_desc` \| `area_desc` |
+| `page`, `per_page` | int | Pagination |
 
-Response:
+**Exemple de réponse :**
 ```json
 {
   "success": true,
   "count": 9,
   "total": 34,
   "page": 1,
-  "per_page": 9,
   "total_pages": 4,
-  "data": [ /* property objects */ ]
+  "data": [ /* biens */ ]
 }
 ```
 
 ---
 
-## Known limitations
+## 🗺️ Pages du site
 
-Documented deliberately — these are the trade-offs a 5-minute review should surface, so they're surfaced here instead:
-
-- **Rate limiting is session-scoped**, not IP- or account-scoped at the storage layer. An attacker who clears cookies (or uses a private window) resets their attempt count. Adequate as a deterrent against casual brute-forcing and as a demonstration of the pattern; a production deployment should back it with a database table or Redis, keyed by IP + account.
-- **Seed data (`database/schema.sql`) is in French.** All application code, comments and UI strings are English; the demo property listings were left as-is since they're content, not code.
-- **No image resizing/optimization** on upload — files are stored as-is (capped at 3 MB). A production version would generate thumbnails server-side.
-- **Single-server deployment assumption** — sessions are stored on local disk (PHP default), which doesn't horizontally scale without a shared session store.
+| Page | Fichier | Rôle |
+|---|---|---|
+| Accueil | `index.php` | Recherche rapide, biens à la une |
+| Catalogue | `properties.php` | Liste des biens avec filtres/tri/pagination |
+| Détail bien | `property-details.php` | Fiche complète + demande de visite |
+| Contact | `contact.php` | Formulaire de contact |
+| Connexion admin | `login.php` | Accès au back-office |
+| Inscription/connexion client | `user/register.php`, `user/login.php` | Accès à l'espace client |
+| Dashboard client | `user/dashboard.php` | Vue d'ensemble de l'activité |
+| Favoris | `user/favoris.php` | Biens favoris |
+| Mes visites | `user/mes-visites.php` | Historique des demandes |
+| Dashboard admin | `admin/dashboard.php` | KPIs et graphiques |
+| Gestion des biens | `admin/properties.php` | CRUD des biens |
+| Visites | `admin/visits.php` | Gestion des demandes de visite |
+| Messages | `admin/messages.php` | Boîte de réception contact |
+| Paramètres | `admin/settings.php` | Configuration de l'agence |
 
 ---
 
-## Roadmap
+## 🧭 Roadmap
 
-- [ ] IP-based rate limiting backed by a dedicated `login_attempts` table
-- [ ] Image thumbnail generation on upload
-- [ ] Integration tests (SQLite in-memory) alongside the current pure-function unit tests
-- [ ] Interactive map (Leaflet.js) for property location
-- [ ] API versioning (`/api/v1/`) if a mobile client is built against it
+- [x] Catalogue avec filtres, tri et pagination
+- [x] Espace client (favoris, visites, profil)
+- [x] Back-office admin avec dashboard graphique
+- [x] Sécurité (CSRF, hashage, upload sécurisé, anti brute-force)
+- [x] Tests unitaires PHPUnit
+- [x] Emails transactionnels (PHPMailer)
+- [x] API REST pour la recherche de biens
+- [ ] Rate limiting basé sur l'IP (table dédiée en base)
+- [ ] Génération de miniatures pour les images uploadées
+- [ ] Carte interactive (Leaflet.js) pour la localisation des biens
+- [ ] Tests d'intégration (base SQLite en mémoire)
+- [ ] Versionnage de l'API (`/api/v1/`)
 
 ---
 
-## License
+## 🤝 Contribuer
 
-Academic project — no license specified. All rights reserved by the author unless stated otherwise.
+Les contributions sont les bienvenues !
+
+1. **Forkez** le projet
+2. Créez une branche : `git checkout -b feature/ma-fonctionnalite`
+3. Commitez : `git commit -m "feat: ajout de ma fonctionnalité"`
+4. Poussez : `git push origin feature/ma-fonctionnalite`
+5. Ouvrez une **Pull Request**
+
+**Convention de commits** : [Conventional Commits](https://www.conventionalcommits.org/fr/) (`feat:`, `fix:`, `docs:`, `test:`, `security:`, `refactor:`…).
+
+---
+
+## 🙏 Crédits
+
+- Composants UI : [Bootstrap](https://getbootstrap.com/)
+- Icônes : [Font Awesome](https://fontawesome.com/)
+- Emails : [PHPMailer](https://github.com/PHPMailer/PHPMailer)
+- Tests : [PHPUnit](https://phpunit.de/)
+- Les visuels de biens immobiliers sont utilisés à des fins de démonstration uniquement.
+
+---
+
+## 👩‍💻 Auteur
+
+**Ons Ajmi** — [@AjmiOns](https://github.com/AjmiOns)
+
+<div align="center">
+
+⭐ Si ce projet vous plaît, n'hésitez pas à lui laisser une étoile !
+
+<sub>Fait avec 💚 et beaucoup de ☕</sub>
+
+</div>
