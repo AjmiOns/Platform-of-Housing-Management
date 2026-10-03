@@ -2,9 +2,9 @@
 
 # 🏠 Dar Tunisie
 
-### Plateforme de gestion immobilière — location d'appartements, villas & studios en Tunisie
+### Property management platform — apartment, villa & studio rentals in Tunisia
 
-Application web full-stack pour une agence immobilière tunisienne, construite avec **PHP**, **MySQL**, **Bootstrap 5** et **JavaScript**.
+A full-stack web application for a Tunisian real estate agency, built with **PHP**, **MySQL**, **Bootstrap 5** and **JavaScript**.
 
 <br>
 
@@ -15,7 +15,7 @@ Application web full-stack pour une agence immobilière tunisienne, construite a
 ![Composer](https://img.shields.io/badge/Composer-885630?style=for-the-badge&logo=composer&logoColor=white)
 ![PHPUnit](https://img.shields.io/badge/PHPUnit-3776AB?style=for-the-badge&logo=php&logoColor=white)
 
-![Status](https://img.shields.io/badge/statut-en%20d%C3%A9veloppement-yellow?style=flat-square)
+![Status](https://img.shields.io/badge/status-in%20development-yellow?style=flat-square)
 ![Responsive](https://img.shields.io/badge/design-responsive-success?style=flat-square)
 ![Tests](https://img.shields.io/badge/tests-PHPUnit-blue?style=flat-square)
 ![Repo size](https://img.shields.io/github/repo-size/AjmiOns/Platform-of-Housing-Management?style=flat-square&color=pink)
@@ -23,107 +23,107 @@ Application web full-stack pour une agence immobilière tunisienne, construite a
 
 <br>
 
-<img src="assets/screenshots/home.png" alt="Page d'accueil Dar Tunisie" width="90%">
+<img src="assets/screenshots/home.png" alt="Dar Tunisie home page" width="90%">
 
 </div>
 
 ---
 
-## 📑 Table des matières
+## 📑 Table of Contents
 
-- [À propos](#-à-propos)
-- [Fonctionnalités](#-fonctionnalités)
-- [Aperçu](#-aperçu)
-- [Stack technique](#-stack-technique)
-- [Sécurité](#-sécurité)
-- [Structure du projet](#-structure-du-projet)
+- [About](#-about)
+- [Features](#-features)
+- [Preview](#-preview)
+- [Tech Stack](#️-tech-stack)
+- [Security](#-security)
+- [Project Structure](#-project-structure)
 - [Installation](#-installation)
-- [Configuration](#-configuration)
+- [Configuration](#️-configuration)
 - [Tests](#-tests)
 - [API](#-api)
-- [Pages du site](#-pages-du-site)
+- [Site Pages](#️-site-pages)
 - [Roadmap](#-roadmap)
-- [Contribuer](#-contribuer)
-- [Crédits](#-crédits)
-- [Auteur](#-auteur)
+- [Contributing](#-contributing)
+- [Credits](#-credits)
+- [Author](#-author)
 
 ---
 
-## 💡 À propos
+## 💡 About
 
-**Dar Tunisie** est une plateforme complète de gestion immobilière pour une agence tunisienne spécialisée dans la location d'appartements, maisons, villas et studios.
+**Dar Tunisie** is a complete property management platform for a Tunisian agency specializing in the rental of apartments, houses, villas and studios.
 
-Le projet couvre trois espaces distincts : un **site public** pour rechercher un bien et demander une visite, un **espace client** pour gérer ses favoris et suivre ses demandes, et un **back-office admin** pour gérer les biens, les visites et les messages.
+The project covers three distinct areas: a **public website** to search for a property and request a visit, a **client area** to manage favorites and track requests, and an **admin back-office** to manage properties, visits and messages.
 
-> 🎯 **Objectif :** proposer une base full-stack propre, sécurisée et testée — pas juste un CRUD, mais une application pensée avec de vraies pratiques d'ingénierie (validation, protection CSRF, tests unitaires, API REST).
+> 🎯 **Goal:** to provide a clean, secure and tested full-stack foundation — not just a CRUD, but an application built with real engineering practices (validation, CSRF protection, unit tests, REST API).
 
 ---
 
-## ✨ Fonctionnalités
+## ✨ Features
 
-| | Fonctionnalité | Description |
+| | Feature | Description |
 |---|---|---|
-| 🏠 | **Accueil** | Recherche rapide, biens mis en avant, statistiques de l'agence |
-| 🔎 | **Catalogue de biens** | Filtres combinés (type, gouvernorat, ville, budget, mot-clé), tri (prix, date, surface) et pagination — le tout en AJAX sans rechargement de page |
-| 📄 | **Fiche bien** | Galerie, caractéristiques détaillées, formulaire de demande de visite |
-| ❤️ | **Favoris** | Ajout/retrait en un clic, sans rechargement de page |
-| 📅 | **Demande de visite** | Formulaire avec confirmation automatique par email |
-| 📬 | **Contact** | Formulaire avec notification email à l'agence |
-| 🔐 | **Espace client** | Inscription, connexion, profil, historique des visites, favoris |
-| 🛠️ | **Back-office admin** | Dashboard avec graphiques, CRUD des biens, gestion des visites et messages, paramètres de l'agence |
-| 🧪 | **Tests automatisés** | Suite PHPUnit sur la logique métier (validation, disponibilité, anti brute-force) |
-| 🔌 | **API REST** | Endpoint JSON documenté pour la recherche de biens |
-| 📱 | **Responsive** | Interface adaptée mobile, tablette et desktop |
+| 🏠 | **Home** | Quick search, featured properties, agency statistics |
+| 🔎 | **Property catalog** | Combined filters (type, governorate, city, budget, keyword), sorting (price, date, area) and pagination — all via AJAX without page reloads |
+| 📄 | **Property page** | Gallery, detailed characteristics, visit request form |
+| ❤️ | **Favorites** | Add/remove in one click, without reloading the page |
+| 📅 | **Visit request** | Form with automatic email confirmation |
+| 📬 | **Contact** | Form with email notification to the agency |
+| 🔐 | **Client area** | Registration, login, profile, visit history, favorites |
+| 🛠️ | **Admin back-office** | Dashboard with charts, property CRUD, visit and message management, agency settings |
+| 🧪 | **Automated tests** | PHPUnit suite covering business logic (validation, availability, anti-brute-force) |
+| 🔌 | **REST API** | Documented JSON endpoint for property search |
+| 📱 | **Responsive** | Interface adapted for mobile, tablet and desktop |
 
 ---
 
-## 📸 Aperçu
+## 📸 Preview
 
-> Les captures ci-dessous sont à remplacer par vos propres captures d'écran une fois le projet lancé localement — placez-les dans `assets/screenshots/`.
+> The screenshots below should be replaced with your own once the project is running locally — place them in `assets/screenshots/`.
 
-### 🏠 Accueil
+### 🏠 Home
 
 <div align="center">
-  <img src="assets/screenshots/home.png" alt="Accueil" width="100%">
+  <img src="assets/screenshots/home.png" alt="Home" width="100%">
 </div>
 
 <br>
 
-### 🔎 Catalogue & fiche bien
+### 🔎 Catalog & property page
 
 <table>
   <tr>
     <td align="center" width="50%">
-      <img src="assets/screenshots/properties.png" alt="Catalogue de biens"><br>
-      <sub><b>Catalogue de biens (filtres + tri + pagination)</b></sub>
+      <img src="assets/screenshots/properties.png" alt="Property catalog"><br>
+      <sub><b>Property catalog (filters + sorting + pagination)</b></sub>
     </td>
     <td align="center" width="50%">
-      <img src="assets/screenshots/property-details.png" alt="Fiche bien"><br>
-      <sub><b>Fiche bien & demande de visite</b></sub>
+      <img src="assets/screenshots/property-details.png" alt="Property page"><br>
+      <sub><b>Property page & visit request</b></sub>
     </td>
   </tr>
 </table>
 
-### 🔐 Espace client & back-office
+### 🔐 Client area & back-office
 
 <table>
   <tr>
     <td align="center" width="33%">
-      <img src="assets/screenshots/dashboard-client.png" alt="Dashboard client"><br>
-      <sub><b>Dashboard client</b></sub>
+      <img src="assets/screenshots/dashboard-client.png" alt="Client dashboard"><br>
+      <sub><b>Client dashboard</b></sub>
     </td>
     <td align="center" width="33%">
-      <img src="assets/screenshots/dashboard-admin.png" alt="Dashboard admin"><br>
-      <sub><b>Dashboard admin (graphiques)</b></sub>
+      <img src="assets/screenshots/dashboard-admin.png" alt="Admin dashboard"><br>
+      <sub><b>Admin dashboard (charts)</b></sub>
     </td>
     <td align="center" width="33%">
-      <img src="assets/screenshots/admin-properties.png" alt="Gestion des biens"><br>
-      <sub><b>Gestion des biens</b></sub>
+      <img src="assets/screenshots/admin-properties.png" alt="Property management"><br>
+      <sub><b>Property management</b></sub>
     </td>
   </tr>
 </table>
 
-### 📬 Contact & favoris
+### 📬 Contact & favorites
 
 <table>
   <tr>
@@ -132,64 +132,64 @@ Le projet couvre trois espaces distincts : un **site public** pour rechercher un
       <sub><b>Contact</b></sub>
     </td>
     <td align="center" width="50%">
-      <img src="assets/screenshots/favoris.png" alt="Favoris"><br>
-      <sub><b>Mes favoris</b></sub>
+      <img src="assets/screenshots/favoris.png" alt="Favorites"><br>
+      <sub><b>My favorites</b></sub>
     </td>
   </tr>
 </table>
 
 ---
 
-## 🛠️ Stack technique
+## 🛠️ Tech Stack
 
-| Catégorie | Technologies |
+| Category | Technologies |
 |---|---|
-| **Backend** | PHP 8.1+, PDO (requêtes préparées) |
-| **Base de données** | MySQL / MariaDB |
-| **Frontend** | Bootstrap 5, JavaScript vanilla (fetch API, pas de framework) |
-| **Emails** | PHPMailer (SMTP configurable) |
+| **Backend** | PHP 8.1+, PDO (prepared statements) |
+| **Database** | MySQL / MariaDB |
+| **Frontend** | Bootstrap 5, vanilla JavaScript (fetch API, no framework) |
+| **Emails** | PHPMailer (configurable SMTP) |
 | **Tests** | PHPUnit 10 |
-| **Gestion des dépendances** | Composer |
-| **Icônes & polices** | Font Awesome, Google Fonts |
-| **Environnement local** | XAMPP |
+| **Dependency management** | Composer |
+| **Icons & fonts** | Font Awesome, Google Fonts |
+| **Local environment** | XAMPP |
 | **Versioning** | Git & GitHub |
 
 ---
 
-## 🔒 Sécurité
+## 🔒 Security
 
-| Mesure | Détail |
+| Measure | Details |
 |---|---|
-| **Mots de passe** | Hashés avec `password_hash()` (bcrypt), vérifiés avec `password_verify()` |
-| **CSRF** | Token requis et vérifié sur tous les formulaires |
-| **XSS** | Toutes les sorties échappées avec `htmlspecialchars()` |
-| **SQL Injection** | 100% requêtes préparées (PDO) |
-| **Upload d'images** | Extension **et** type MIME réel vérifiés (`finfo_file`), exécution de scripts bloquée dans le dossier uploads |
-| **Anti brute-force** | Rate limiting sur les connexions admin et client (5 tentatives / 15 min) |
-| **Secrets** | Identifiants base de données et SMTP dans `.env` (jamais versionnés) |
+| **Passwords** | Hashed with `password_hash()` (bcrypt), verified with `password_verify()` |
+| **CSRF** | Token required and verified on all forms |
+| **XSS** | All output escaped with `htmlspecialchars()` |
+| **SQL Injection** | 100% prepared statements (PDO) |
+| **Image uploads** | Extension **and** actual MIME type checked (`finfo_file`), script execution blocked in the uploads folder |
+| **Anti-brute-force** | Rate limiting on admin and client logins (5 attempts / 15 min) |
+| **Secrets** | Database and SMTP credentials stored in `.env` (never versioned) |
 
 ---
 
-## 📂 Structure du projet
+## 📂 Project Structure
 
 ```
 dar-tunisie/
-├── admin/                  # Back-office (dashboard, biens, visites, messages, paramètres)
+├── admin/                  # Back-office (dashboard, properties, visits, messages, settings)
 ├── api/
-│   └── properties.php      # Endpoint JSON REST
-├── config/                 # Configuration (constantes, connexion DB, loader .env)
+│   └── properties.php      # REST JSON endpoint
+├── config/                 # Configuration (constants, DB connection, .env loader)
 ├── database/
-│   └── schema.sql          # Schéma complet + données de démo
-├── includes/                # Logique partagée
-│   ├── PropertyRepository.php   # Pattern Repository (CRUD biens)
-│   ├── functions.php            # Fonctions utilitaires
+│   └── schema.sql          # Full schema + demo data
+├── includes/                # Shared logic
+│   ├── PropertyRepository.php   # Repository pattern (property CRUD)
+│   ├── functions.php            # Utility functions
 │   ├── mailer.php                # Emails (PHPMailer)
-│   ├── rate_limiter.php          # Anti brute-force
-│   ├── auth.php / user_auth.php  # Sessions admin / client
+│   ├── rate_limiter.php          # Anti-brute-force
+│   ├── auth.php / user_auth.php  # Admin / client sessions
 ├── public/
-│   └── uploads/             # Images uploadées (protégées par .htaccess)
-├── tests/                    # Tests unitaires PHPUnit
-├── user/                     # Espace client (dashboard, favoris, visites, profil)
+│   └── uploads/             # Uploaded images (protected by .htaccess)
+├── tests/                    # PHPUnit unit tests
+├── user/                     # Client area (dashboard, favorites, visits, profile)
 ├── composer.json
 ├── phpunit.xml
 └── .env.example
@@ -199,67 +199,67 @@ dar-tunisie/
 
 ## 🚀 Installation
 
-### Prérequis
+### Prerequisites
 
-- [XAMPP](https://www.apachefriends.org/) (ou tout serveur PHP + MySQL)
-- PHP ≥ 8.1 avec les extensions `pdo_mysql`, `mbstring`, `fileinfo`
+- [XAMPP](https://www.apachefriends.org/) (or any PHP + MySQL server)
+- PHP ≥ 8.1 with the `pdo_mysql`, `mbstring` and `fileinfo` extensions
 - [Composer](https://getcomposer.org/)
 
-### 1. Cloner le dépôt
+### 1. Clone the repository
 
 ```bash
 git clone https://github.com/AjmiOns/Platform-of-Housing-Management.git
 cd Platform-of-Housing-Management
 ```
 
-### 2. Installer les dépendances
+### 2. Install dependencies
 
 ```bash
 composer install
 ```
 
-### 3. Configurer l'environnement
+### 3. Configure the environment
 
 ```bash
 copy .env.example .env
 ```
 
-Éditez `.env` si votre configuration diffère des valeurs par défaut (voir [Configuration](#-configuration)).
+Edit `.env` if your setup differs from the default values (see [Configuration](#️-configuration)).
 
-### 4. Créer la base de données
+### 4. Create the database
 
 ```bash
 mysql -u root -e "CREATE DATABASE tunisie_logement CHARACTER SET utf8mb4;"
 mysql -u root tunisie_logement < database/schema.sql
 ```
 
-### 5. Lancer le projet
+### 5. Run the project
 
-Démarrez **Apache** et **MySQL** depuis le panneau XAMPP, puis :
+Start **Apache** and **MySQL** from the XAMPP control panel, then go to:
 
 👉 `http://localhost/dar-tunisie/index.php`
 
-**Compte admin par défaut** (créé par `schema.sql`) :
+**Default admin account** (created by `schema.sql`):
 ```
 Email    : admin@dar-tunisie.tn
 Password : admin123
 ```
-⚠️ À changer avant toute mise en production.
+⚠️ Change this before any production deployment.
 
 ---
 
 ## ⚙️ Configuration
 
-Variables principales du fichier `.env` :
+Main variables in the `.env` file:
 
-| Variable | Rôle | Valeur par défaut |
+| Variable | Purpose | Default value |
 |---|---|---|
-| `APP_BASE` | Préfixe d'URL, doit correspondre au nom de votre dossier dans `htdocs` | `/projet_js` |
-| `DB_HOST`, `DB_NAME`, `DB_USER`, `DB_PASS` | Connexion à la base de données | valeurs XAMPP par défaut |
-| `MAIL_HOST` | Serveur SMTP — laissez vide pour désactiver les emails | *(vide)* |
-| `MAIL_USERNAME`, `MAIL_PASSWORD`, `MAIL_PORT`, `MAIL_ENCRYPTION` | Identifiants SMTP | — |
+| `APP_BASE` | URL prefix, must match your folder name in `htdocs` | `/projet_js` |
+| `DB_HOST`, `DB_NAME`, `DB_USER`, `DB_PASS` | Database connection | default XAMPP values |
+| `MAIL_HOST` | SMTP server — leave empty to disable emails | *(empty)* |
+| `MAIL_USERNAME`, `MAIL_PASSWORD`, `MAIL_PORT`, `MAIL_ENCRYPTION` | SMTP credentials | — |
 
-💡 Pour tester les emails sans vraie boîte mail, créez une boîte gratuite sur [mailtrap.io](https://mailtrap.io) et collez ses identifiants SMTP dans `.env`.
+💡 To test emails without a real mailbox, create a free inbox on [mailtrap.io](https://mailtrap.io) and paste its SMTP credentials into `.env`.
 
 ---
 
@@ -270,14 +270,14 @@ composer install
 composer test
 ```
 
-La suite de tests couvre la logique métier pure (validation, disponibilité, anti brute-force) — aucune base de données requise, exécution en moins d'une seconde :
+The test suite covers pure business logic (validation, availability, anti-brute-force) — no database required, runs in under a second:
 
-| Fichier | Couvre |
+| File | Covers |
 |---|---|
-| `ClientRegistrationValidationTest.php` | Règles de validation de l'inscription |
-| `ProfileValidationTest.php` | Validation de la mise à jour du profil |
-| `PropertyAvailabilityTest.php` | Disponibilité d'un bien pour une visite |
-| `RateLimiterTest.php` | Logique anti brute-force |
+| `ClientRegistrationValidationTest.php` | Registration validation rules |
+| `ProfileValidationTest.php` | Profile update validation |
+| `PropertyAvailabilityTest.php` | Property availability for a visit |
+| `RateLimiterTest.php` | Anti-brute-force logic |
 
 ---
 
@@ -285,18 +285,18 @@ La suite de tests couvre la logique métier pure (validation, disponibilité, an
 
 `GET /api/properties.php`
 
-| Paramètre | Type | Description |
+| Parameter | Type | Description |
 |---|---|---|
-| `id` | int | Retourne un bien précis (avec ses équipements) |
-| `q` | string | Recherche full-text (titre, description, adresse) |
-| `category` | string | Slug de catégorie |
-| `governorate` | string | Gouvernorat |
-| `city` | string | Ville (recherche partielle) |
-| `max_price` | float | Budget maximum |
+| `id` | int | Returns a specific property (with its amenities) |
+| `q` | string | Full-text search (title, description, address) |
+| `category` | string | Category slug |
+| `governorate` | string | Governorate |
+| `city` | string | City (partial match) |
+| `max_price` | float | Maximum budget |
 | `sort` | string | `relevance` \| `newest` \| `price_asc` \| `price_desc` \| `area_desc` |
 | `page`, `per_page` | int | Pagination |
 
-**Exemple de réponse :**
+**Example response:**
 ```json
 {
   "success": true,
@@ -304,82 +304,82 @@ La suite de tests couvre la logique métier pure (validation, disponibilité, an
   "total": 34,
   "page": 1,
   "total_pages": 4,
-  "data": [ /* biens */ ]
+  "data": [ /* properties */ ]
 }
 ```
 
 ---
 
-## 🗺️ Pages du site
+## 🗺️ Site Pages
 
-| Page | Fichier | Rôle |
+| Page | File | Purpose |
 |---|---|---|
-| Accueil | `index.php` | Recherche rapide, biens à la une |
-| Catalogue | `properties.php` | Liste des biens avec filtres/tri/pagination |
-| Détail bien | `property-details.php` | Fiche complète + demande de visite |
-| Contact | `contact.php` | Formulaire de contact |
-| Connexion admin | `login.php` | Accès au back-office |
-| Inscription/connexion client | `user/register.php`, `user/login.php` | Accès à l'espace client |
-| Dashboard client | `user/dashboard.php` | Vue d'ensemble de l'activité |
-| Favoris | `user/favoris.php` | Biens favoris |
-| Mes visites | `user/mes-visites.php` | Historique des demandes |
-| Dashboard admin | `admin/dashboard.php` | KPIs et graphiques |
-| Gestion des biens | `admin/properties.php` | CRUD des biens |
-| Visites | `admin/visits.php` | Gestion des demandes de visite |
-| Messages | `admin/messages.php` | Boîte de réception contact |
-| Paramètres | `admin/settings.php` | Configuration de l'agence |
+| Home | `index.php` | Quick search, featured properties |
+| Catalog | `properties.php` | Property list with filters/sorting/pagination |
+| Property details | `property-details.php` | Full page + visit request |
+| Contact | `contact.php` | Contact form |
+| Admin login | `login.php` | Back-office access |
+| Client registration/login | `user/register.php`, `user/login.php` | Client area access |
+| Client dashboard | `user/dashboard.php` | Activity overview |
+| Favorites | `user/favoris.php` | Favorite properties |
+| My visits | `user/mes-visites.php` | Request history |
+| Admin dashboard | `admin/dashboard.php` | KPIs and charts |
+| Property management | `admin/properties.php` | Property CRUD |
+| Visits | `admin/visits.php` | Visit request management |
+| Messages | `admin/messages.php` | Contact inbox |
+| Settings | `admin/settings.php` | Agency configuration |
 
 ---
 
 ## 🧭 Roadmap
 
-- [x] Catalogue avec filtres, tri et pagination
-- [x] Espace client (favoris, visites, profil)
-- [x] Back-office admin avec dashboard graphique
-- [x] Sécurité (CSRF, hashage, upload sécurisé, anti brute-force)
-- [x] Tests unitaires PHPUnit
-- [x] Emails transactionnels (PHPMailer)
-- [x] API REST pour la recherche de biens
-- [ ] Rate limiting basé sur l'IP (table dédiée en base)
-- [ ] Génération de miniatures pour les images uploadées
-- [ ] Carte interactive (Leaflet.js) pour la localisation des biens
-- [ ] Tests d'intégration (base SQLite en mémoire)
-- [ ] Versionnage de l'API (`/api/v1/`)
+- [x] Catalog with filters, sorting and pagination
+- [x] Client area (favorites, visits, profile)
+- [x] Admin back-office with graphical dashboard
+- [x] Security (CSRF, hashing, secure uploads, anti-brute-force)
+- [x] PHPUnit unit tests
+- [x] Transactional emails (PHPMailer)
+- [x] REST API for property search
+- [ ] IP-based rate limiting (dedicated database table)
+- [ ] Thumbnail generation for uploaded images
+- [ ] Interactive map (Leaflet.js) for property locations
+- [ ] Integration tests (in-memory SQLite database)
+- [ ] API versioning (`/api/v1/`)
 
 ---
 
-## 🤝 Contribuer
+## 🤝 Contributing
 
-Les contributions sont les bienvenues !
+Contributions are welcome!
 
-1. **Forkez** le projet
-2. Créez une branche : `git checkout -b feature/ma-fonctionnalite`
-3. Commitez : `git commit -m "feat: ajout de ma fonctionnalité"`
-4. Poussez : `git push origin feature/ma-fonctionnalite`
-5. Ouvrez une **Pull Request**
+1. **Fork** the project
+2. Create a branch: `git checkout -b feature/my-feature`
+3. Commit: `git commit -m "feat: add my feature"`
+4. Push: `git push origin feature/my-feature`
+5. Open a **Pull Request**
 
-**Convention de commits** : [Conventional Commits](https://www.conventionalcommits.org/fr/) (`feat:`, `fix:`, `docs:`, `test:`, `security:`, `refactor:`…).
-
----
-
-## 🙏 Crédits
-
-- Composants UI : [Bootstrap](https://getbootstrap.com/)
-- Icônes : [Font Awesome](https://fontawesome.com/)
-- Emails : [PHPMailer](https://github.com/PHPMailer/PHPMailer)
-- Tests : [PHPUnit](https://phpunit.de/)
-- Les visuels de biens immobiliers sont utilisés à des fins de démonstration uniquement.
+**Commit convention:** [Conventional Commits](https://www.conventionalcommits.org/) (`feat:`, `fix:`, `docs:`, `test:`, `security:`, `refactor:`…).
 
 ---
 
-## 👩‍💻 Auteur
+## 🙏 Credits
+
+- UI components: [Bootstrap](https://getbootstrap.com/)
+- Icons: [Font Awesome](https://fontawesome.com/)
+- Emails: [PHPMailer](https://github.com/PHPMailer/PHPMailer)
+- Tests: [PHPUnit](https://phpunit.de/)
+- Property images are used for demonstration purposes only.
+
+---
+
+## 👩‍💻 Author
 
 **Ons Ajmi** — [@AjmiOns](https://github.com/AjmiOns)
 
 <div align="center">
 
-⭐ Si ce projet vous plaît, n'hésitez pas à lui laisser une étoile !
+⭐ If you like this project, feel free to give it a star!
 
-<sub>Fait avec 💚 et beaucoup de ☕</sub>
+<sub>Made with 💚 and lots of ☕</sub>
 
 </div>
