@@ -374,7 +374,11 @@ Contributions are welcome!
 
 ## 👩‍💻 Author
 
-**Ons Ajmi** — [@AjmiOns](https://github.com/AjmiOns)
+Ajmi Ons
+Cloud Infrastructure Management Engineering Student at TEK-UP University, Tunisia.
+
+🐙 GitHub: (https://github.com/<your-username>)
+💼 LinkedIn: (https://www.linkedin.com/in/<your-profile>)
 
 <div align="center">
 
